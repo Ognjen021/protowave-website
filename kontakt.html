@@ -3,94 +3,11 @@
 <head>
   <meta charset="utf-8"/>
   <title>ProtoWave — Kontakt · pokreni projekat</title>
-  <meta name="viewport" content="width=1280"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <link rel="icon" href="logo-mark.svg"/>
   <link rel="stylesheet" href="colors_and_type.css"/>
+  <link rel="stylesheet" href="base.css"/>
   <style>
-    * { box-sizing: border-box; }
-    html, body { margin: 0; }
-    body {
-      background: var(--pw-bg);
-      color: var(--pw-fg);
-      font-family: var(--pw-font-sans);
-      font-size: 16px;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
-    a { color: inherit; text-decoration: none; }
-    button { font-family: inherit; cursor: pointer; }
-    input, textarea, select { font-family: inherit; color: inherit; }
-
-    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
-
-    /* ------------------------------------------------------------------ NAV */
-    .nav {
-      position: sticky; top: 0; z-index: 30;
-      background: rgba(8,9,10,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--pw-border);
-    }
-    .nav-inner { display: flex; align-items: center; height: 64px; gap: 32px; }
-    .nav-brand {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
-    }
-    .nav-brand .sub {
-      font-family: var(--pw-font-mono); font-size: 10px;
-      color: var(--pw-fg-4); margin-left: 4px;
-      padding-left: 10px; border-left: 1px solid var(--pw-border-2);
-      line-height: 1; letter-spacing: 0.04em;
-    }
-    .nav-links { display: flex; gap: 24px; }
-    .nav-links a { font-size: 14px; color: var(--pw-fg-2);
-                   transition: color var(--pw-dur-base) var(--pw-ease); }
-    .nav-links a:hover { color: var(--pw-fg); }
-    .nav-links a.active { color: var(--pw-fg); }
-    .nav-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
-
-    /* ------------------------------------------------------------------ BTN */
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      height: 36px; padding: 0 14px;
-      border-radius: var(--pw-r-2);
-      font-size: 14px; font-weight: 500; line-height: 1;
-      border: 1px solid transparent;
-      transition: background var(--pw-dur-base) var(--pw-ease),
-                  border-color var(--pw-dur-base) var(--pw-ease);
-    }
-    .btn-primary {
-      background: var(--pw-brand); color: #fff;
-      box-shadow: 0 1px 0 rgba(255,255,255,0.18) inset;
-    }
-    .btn-primary:hover { background: var(--pw-brand-2); }
-    .btn-secondary {
-      background: var(--pw-surface-2);
-      border-color: var(--pw-border-2);
-      color: var(--pw-fg);
-    }
-    .btn-secondary:hover { background: var(--pw-surface-3); border-color: var(--pw-border-3); }
-    .btn-ghost { color: var(--pw-fg-2); }
-    .btn-ghost:hover { color: var(--pw-fg); }
-    .btn-lg { height: 44px; padding: 0 20px; font-size: 15px; }
-    .btn-block { width: 100%; justify-content: center; }
-
-    /* ------------------------------------------------------------------ SECTION */
-    .section { padding: 96px 0; border-bottom: 1px solid var(--pw-border); }
-    .section-eyebrow {
-      font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--pw-fg-3); font-weight: 500;
-    }
-    .section-title {
-      font-size: 40px; font-weight: 600; letter-spacing: -0.02em;
-      line-height: 1.1; color: var(--pw-fg); margin: 12px 0 0; max-width: 720px;
-    }
-    .section-sub {
-      font-size: 17px; color: var(--pw-fg-2); margin-top: 14px; max-width: 640px;
-    }
-
-    .ico { width: 16px; height: 16px; }
-    .ico-lg { width: 20px; height: 20px; }
-
     /* ------------------------------------------------------------------ HERO */
     .page-hero { padding: 80px 0 56px; position: relative; overflow: hidden; }
     .page-hero-bg {
@@ -123,7 +40,7 @@
       display: inline-flex; align-items: center; gap: 8px;
       padding: 6px 12px; border-radius: 999px;
       background: var(--pw-surface); border: 1px solid var(--pw-border-2);
-      font-size: 12px; color: var(--pw-fg-2);
+      font-size: 16px; color: var(--pw-fg-2);
       font-family: var(--pw-font-mono);
     }
     .hero-meta .pill .d {
@@ -154,12 +71,12 @@
       border-bottom: 1px solid var(--pw-border);
     }
     .form-card-bar .crumb {
-      font-size: 12px; font-family: var(--pw-font-mono);
+      font-size: 16px; font-family: var(--pw-font-mono);
       color: var(--pw-fg-3);
     }
     .form-card-bar .right {
       margin-left: auto;
-      font-size: 11px; font-family: var(--pw-font-mono);
+      font-size: 16px; font-family: var(--pw-font-mono);
       color: var(--pw-fg-4);
       display: inline-flex; align-items: center; gap: 8px;
     }
@@ -173,15 +90,15 @@
     .fset { display: flex; flex-direction: column; gap: 16px; }
     .fset-head { display: flex; align-items: baseline; gap: 12px; }
     .fset-num {
-      font-family: var(--pw-font-mono); font-size: 11px;
+      font-family: var(--pw-font-mono); font-size: 16px;
       letter-spacing: 0.08em; color: var(--pw-fg-4);
     }
     .fset-title {
-      font-size: 16px; font-weight: 600; color: var(--pw-fg);
+      font-size: 20px; font-weight: 600; color: var(--pw-fg);
       letter-spacing: -0.01em;
     }
     .fset-hint {
-      font-size: 12px; color: var(--pw-fg-4);
+      font-size: 16px; color: var(--pw-fg-4);
       font-family: var(--pw-font-mono);
       margin-left: auto;
     }
@@ -204,15 +121,15 @@
     .chip:hover { border-color: var(--pw-border-2); background: var(--pw-surface-2); }
     .chip input { position: absolute; opacity: 0; pointer-events: none; }
     .chip .t {
-      font-size: 13px; font-weight: 500; color: var(--pw-fg);
+      font-size: 16px; font-weight: 500; color: var(--pw-fg);
       display: flex; align-items: center; gap: 8px;
     }
     .chip .t .num {
-      font-family: var(--pw-font-mono); font-size: 10px;
+      font-family: var(--pw-font-mono); font-size: 16px;
       color: var(--pw-fg-4); letter-spacing: 0.04em;
     }
     .chip .s {
-      font-size: 11px; font-family: var(--pw-font-mono);
+      font-size: 16px; font-family: var(--pw-font-mono);
       color: var(--pw-fg-3);
     }
     .chip:has(input:checked) {
@@ -232,7 +149,7 @@
       display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
     }
     .label {
-      font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+      font-size: 16px; letter-spacing: 0.06em; text-transform: uppercase;
       color: var(--pw-fg-4); font-weight: 500;
     }
     .label .req { color: #F87171; margin-left: 2px; }
@@ -243,7 +160,7 @@
       border: 1px solid var(--pw-border);
       border-radius: 8px;
       color: var(--pw-fg);
-      font-size: 14px; line-height: 1.4;
+      font-size: 16px; line-height: 1.4;
       transition: border-color var(--pw-dur-base) var(--pw-ease),
                   background var(--pw-dur-base) var(--pw-ease);
       outline: none;
@@ -264,7 +181,7 @@
       padding-right: 36px;
     }
     .field-hint {
-      font-size: 11px; font-family: var(--pw-font-mono);
+      font-size: 16px; font-family: var(--pw-font-mono);
       color: var(--pw-fg-4);
       display: flex; justify-content: space-between;
     }
@@ -292,11 +209,11 @@
       display: flex; align-items: center; justify-content: center;
     }
     .uploader .t {
-      font-size: 14px; font-weight: 500; color: var(--pw-fg);
+      font-size: 16px; font-weight: 500; color: var(--pw-fg);
     }
     .uploader .t b { color: #B5A8FF; font-weight: 500; }
     .uploader .s {
-      font-size: 11px; font-family: var(--pw-font-mono);
+      font-size: 16px; font-family: var(--pw-font-mono);
       color: var(--pw-fg-4); letter-spacing: 0.02em;
     }
     .uploader .formats {
@@ -304,7 +221,7 @@
       margin-top: 4px;
     }
     .uploader .formats span {
-      padding: 3px 8px; font-size: 10px;
+      padding: 3px 8px; font-size: 16px;
       font-family: var(--pw-font-mono);
       background: var(--pw-surface);
       border: 1px solid var(--pw-border);
@@ -341,9 +258,9 @@
     }
     .check-row:has(input:checked) .box svg { opacity: 1; }
     .check-row .body { flex: 1; }
-    .check-row .body .t { font-size: 13px; font-weight: 500; color: var(--pw-fg); }
+    .check-row .body .t { font-size: 16px; font-weight: 500; color: var(--pw-fg); }
     .check-row .body .s {
-      font-size: 12px; color: var(--pw-fg-3); margin-top: 2px;
+      font-size: 16px; color: var(--pw-fg-3); margin-top: 2px;
       font-family: var(--pw-font-mono);
     }
 
@@ -354,7 +271,7 @@
       gap: 16px;
     }
     .submit-row .meta {
-      font-size: 12px; font-family: var(--pw-font-mono);
+      font-size: 16px; font-family: var(--pw-font-mono);
       color: var(--pw-fg-4);
       display: flex; flex-direction: column; gap: 2px;
     }
@@ -375,7 +292,7 @@
       border-color: var(--pw-border-2);
     }
     .side-card .head {
-      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase;
       color: var(--pw-fg-4); font-weight: 500; margin-bottom: 16px;
     }
     .side-row {
@@ -386,11 +303,11 @@
     }
     .side-row:first-of-type { border-top: 0; padding-top: 0; }
     .side-row .k {
-      font-size: 11px; color: var(--pw-fg-4);
+      font-size: 16px; color: var(--pw-fg-4);
       letter-spacing: 0.06em; text-transform: uppercase;
     }
     .side-row .v {
-      font-size: 13px; color: var(--pw-fg);
+      font-size: 16px; color: var(--pw-fg);
       font-family: var(--pw-font-mono);
     }
     .side-row .v a:hover { color: var(--pw-accent); }
@@ -408,19 +325,19 @@
       width: 24px; height: 24px; border-radius: 6px;
       background: var(--pw-bg-2);
       border: 1px solid var(--pw-border-2);
-      font-family: var(--pw-font-mono); font-size: 11px;
+      font-family: var(--pw-font-mono); font-size: 16px;
       color: var(--pw-fg-2);
       display: flex; align-items: center; justify-content: center;
     }
     .next-item .body .t {
-      font-size: 13px; font-weight: 500; color: var(--pw-fg);
+      font-size: 16px; font-weight: 500; color: var(--pw-fg);
     }
     .next-item .body .s {
-      font-size: 11px; color: var(--pw-fg-3);
+      font-size: 16px; color: var(--pw-fg-3);
       font-family: var(--pw-font-mono); margin-top: 2px;
     }
     .next-item .eta {
-      font-size: 10px; font-family: var(--pw-font-mono);
+      font-size: 16px; font-family: var(--pw-font-mono);
       letter-spacing: 0.04em;
       color: var(--pw-fg-4);
       padding: 3px 8px; border-radius: 4px;
@@ -435,7 +352,7 @@
       background: rgba(77,223,194,0.08);
       border: 1px solid rgba(77,223,194,0.32);
       color: #4DDFC2;
-      font-size: 11px; font-family: var(--pw-font-mono);
+      font-size: 16px; font-family: var(--pw-font-mono);
     }
     .nda-pill .d {
       width: 5px; height: 5px; border-radius: 99px;
@@ -484,11 +401,11 @@
     }
     .calc-mat input { position: absolute; opacity: 0; pointer-events: none; }
     .calc-mat .id {
-      font-family: var(--pw-font-mono); font-size: 10px;
+      font-family: var(--pw-font-mono); font-size: 16px;
       color: var(--pw-fg-4); letter-spacing: 0.04em;
     }
     .calc-mat .n {
-      font-size: 13px; font-weight: 500; color: var(--pw-fg);
+      font-size: 16px; font-weight: 500; color: var(--pw-fg);
       margin-top: 4px;
     }
     .calc-mat:hover { border-color: var(--pw-border-2); }
@@ -503,9 +420,9 @@
       display: flex; align-items: baseline; justify-content: space-between;
     }
     .range-top .val {
-      font-family: var(--pw-font-mono); font-size: 14px; color: var(--pw-fg);
+      font-family: var(--pw-font-mono); font-size: 16px; color: var(--pw-fg);
     }
-    .range-top .val .u { font-size: 11px; color: var(--pw-fg-4); margin-left: 4px; }
+    .range-top .val .u { font-size: 16px; color: var(--pw-fg-4); margin-left: 4px; }
     .range {
       -webkit-appearance: none; appearance: none;
       width: 100%; height: 4px;
@@ -538,7 +455,7 @@
       color: var(--pw-fg);
     }
     .calc-price .u {
-      font-family: var(--pw-font-mono); font-size: 13px;
+      font-family: var(--pw-font-mono); font-size: 16px;
       color: var(--pw-fg-3);
     }
     .calc-price .badge {
@@ -547,7 +464,7 @@
       border: 1px solid rgba(77,223,194,0.32);
       color: #4DDFC2;
       border-radius: 999px;
-      font-size: 10px; font-family: var(--pw-font-mono);
+      font-size: 16px; font-family: var(--pw-font-mono);
       letter-spacing: 0.04em; text-transform: uppercase;
     }
     .calc-breakdown {
@@ -555,12 +472,12 @@
     }
     .calc-line {
       display: flex; justify-content: space-between;
-      font-size: 12px; font-family: var(--pw-font-mono);
+      font-size: 16px; font-family: var(--pw-font-mono);
     }
     .calc-line .k { color: var(--pw-fg-4); }
     .calc-line .v { color: var(--pw-fg-1); }
     .calc-note {
-      font-size: 11px; color: var(--pw-fg-4);
+      font-size: 16px; color: var(--pw-fg-4);
       font-family: var(--pw-font-mono); line-height: 1.55;
       padding-top: 14px; border-top: 1px solid var(--pw-border);
     }
@@ -574,7 +491,7 @@
     .faq-q {
       display: flex; align-items: center; justify-content: space-between;
       padding: 22px 0; cursor: pointer;
-      font-size: 16px; font-weight: 500; color: var(--pw-fg);
+      font-size: 20px; font-weight: 500; color: var(--pw-fg);
       letter-spacing: -0.01em;
       transition: color var(--pw-dur-base) var(--pw-ease);
     }
@@ -595,7 +512,7 @@
     .faq-item.open .faq-a { max-height: 400px; }
     .faq-a-inner {
       padding: 0 0 22px;
-      font-size: 14px; color: var(--pw-fg-3); line-height: 1.6;
+      font-size: 16px; color: var(--pw-fg-3); line-height: 1.6;
       max-width: 720px;
     }
     .faq-a-inner b { color: var(--pw-fg-2); font-weight: 500; }
@@ -628,39 +545,57 @@
       margin-bottom: 16px;
     }
     .alt-card h3 {
-      margin: 0; font-size: 16px; font-weight: 600; color: var(--pw-fg);
+      margin: 0; font-size: 20px; font-weight: 600; color: var(--pw-fg);
     }
     .alt-card p {
-      margin: 6px 0 0; font-size: 13px; color: var(--pw-fg-3); line-height: 1.55;
+      margin: 6px 0 0; font-size: 16px; color: var(--pw-fg-3); line-height: 1.55;
     }
     .alt-card .v {
       margin-top: 14px; padding-top: 14px;
       border-top: 1px solid var(--pw-border);
-      font-size: 13px; font-family: var(--pw-font-mono); color: var(--pw-fg);
+      font-size: 16px; font-family: var(--pw-font-mono); color: var(--pw-fg);
       display: flex; justify-content: space-between; align-items: center;
     }
     .alt-card .v .arr { color: var(--pw-fg-4); }
 
-    /* ============ FOOTER ============ */
-    .footer {
-      padding: 56px 0 32px;
-      border-top: 1px solid var(--pw-border);
-      color: var(--pw-fg-3); font-size: 13px;
-    }
-    .footer-grid {
-      display: grid; grid-template-columns: 1.4fr repeat(4, 1fr);
-      gap: 32px; margin-bottom: 40px;
-    }
-    .footer-col h4 {
-      font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--pw-fg-4); font-weight: 500; margin: 0 0 12px;
-    }
-    .footer-col a { display: block; color: var(--pw-fg-2); padding: 6px 0; }
-    .footer-col a:hover { color: var(--pw-fg); }
-    .footer-bot {
-      display: flex; align-items: center; justify-content: space-between;
-      padding-top: 24px; border-top: 1px solid var(--pw-border);
-      font-family: var(--pw-font-mono); font-size: 11px; color: var(--pw-fg-4);
+    /* =================================================== RESPONSIVE */
+    @media (max-width: 800px) {
+      .page-hero { padding: 40px 0 28px; }
+      .page-hero h1 { font-size: 32px; line-height: 1.1; }
+      .page-hero p.lede { font-size: 16px; margin-top: 16px; }
+      .hero-meta { gap: 8px; margin-top: 20px; padding-top: 18px; }
+      .hero-meta .pill { font-size: 12px; padding: 5px 10px; }
+
+      .contact-main { padding: 40px 0 56px; }
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .side { position: static; top: auto; }
+
+      .form-body { padding: 20px; gap: 28px; }
+      .form-card-bar { padding: 10px 14px; flex-wrap: wrap; gap: 6px; }
+      .chips { grid-template-columns: 1fr 1fr; }
+      .field-row, .field-row-3 { grid-template-columns: 1fr; gap: 12px; }
+      .submit-row {
+        flex-direction: column; align-items: stretch;
+      }
+      .submit-row .btn { justify-content: center; }
+
+      .calc-grid {
+        grid-template-columns: 1fr;
+        gap: 20px; margin-top: 32px;
+      }
+      .calc-controls, .calc-summary { padding: 20px; }
+      .calc-mat-grid { grid-template-columns: repeat(2, 1fr); }
+      .calc-price .v { font-size: 32px; }
+
+      .faq-list { margin-top: 32px; }
+      .faq-q { font-size: 16px; padding: 18px 0; }
+
+      .alt-contact { padding: 48px 0; }
+      .alt-grid { grid-template-columns: 1fr; gap: 12px; }
+      .alt-card { padding: 20px; }
     }
   </style>
 </head>
@@ -684,7 +619,6 @@
           <rect x="11" y="4"  width="14" height="3" rx="1.5" fill="url(#lg-nav)"/>
         </svg>
         ProtoWave
-        <span class="sub">CAD · 3D štampa · skeniranje · automatizacija</span>
       </a>
       <nav class="nav-links">
         <a href="index.html#usluge">Usluge</a>
@@ -697,6 +631,11 @@
         <a class="btn btn-ghost" href="#prijava">
 </a>
         <a class="btn btn-primary" href="kontakt.html">Kontakt</a>
+        <button class="nav-toggle" type="button" aria-label="Otvori meni" aria-expanded="false">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M3 6h18M3 12h18M3 18h18"/>
+          </svg>
+        </button>
       </div>
     </div>
   </header>
@@ -1004,7 +943,7 @@
               <span class="nda-pill" style="background:var(--pw-bg-2);border-color:var(--pw-border-2);color:var(--pw-fg-2)">PDF</span>
               <span class="nda-pill" style="background:var(--pw-bg-2);border-color:var(--pw-border-2);color:var(--pw-fg-2)">ZIP</span>
             </div>
-            <p style="margin:16px 0 0;font-size:12px;color:var(--pw-fg-3);font-family:var(--pw-font-mono);line-height:1.6">
+            <p style="margin:16px 0 0;font-size: 16px;color:var(--pw-fg-3);font-family:var(--pw-font-mono);line-height:1.6">
               Nema fajla? Pošalji skicu, fotografiju ili samo opis u briefu — krećemo od ideje.
             </p>
           </div>
@@ -1292,9 +1231,9 @@
               <rect x="7"  y="10" width="22" height="3" rx="1.5" fill="url(#lg-ft)" opacity="0.9"/>
               <rect x="11" y="4"  width="14" height="3" rx="1.5" fill="url(#lg-ft)"/>
             </svg>
-            <span style="font-size:15px;font-weight:600;color:var(--pw-fg)">ProtoWave</span>
+            <span style="font-size: 16px;font-weight:600;color:var(--pw-fg)">ProtoWave</span>
           </div>
-          <p style="margin:0;color:var(--pw-fg-3);max-width:280px;line-height:1.6;font-size:13px">
+          <p style="margin:0;color:var(--pw-fg-3);max-width:280px;line-height:1.6;font-size: 16px">
             Inženjerski studio za 3D štampu i prototipiranje. Novi Sad · Srbija.
           </p>
         </div>
@@ -1334,6 +1273,23 @@
   </footer>
 
   <script>
+    // Mobile nav toggle
+    (function () {
+      var btn = document.querySelector('.nav-toggle');
+      if (!btn) return;
+      var nav = btn.closest('.nav');
+      btn.addEventListener('click', function () {
+        var open = nav.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open);
+      });
+      nav.querySelectorAll('.nav-links a').forEach(function (a) {
+        a.addEventListener('click', function () {
+          nav.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      });
+    })();
+
     // brief char counter
     (function () {
       var ta = document.getElementById('brief');
