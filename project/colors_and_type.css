@@ -1,0 +1,218 @@
+/* =========================================================
+   ProtoWave — Colors & Type
+   Dark, minimal, technical. Linear-inspired with a 3D-print
+   vertical accent (violet → mint/teal wave).
+   ========================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+:root {
+  /* ---------- Base surface / fg ramp (dark only) ---------- */
+  --pw-bg:            #08090a;   /* page */
+  --pw-bg-2:          #0e0f11;   /* sunken */
+  --pw-surface:       #131418;   /* default card / panel */
+  --pw-surface-2:     #181a1f;   /* hover / elevated */
+  --pw-surface-3:     #1f2127;   /* highest elevation */
+  --pw-overlay:       rgba(8, 9, 10, 0.72);
+
+  /* Foreground — high → faint */
+  --pw-fg:            #f7f8f8;
+  --pw-fg-1:          #e4e6eb;
+  --pw-fg-2:          #b4b8c0;   /* secondary copy */
+  --pw-fg-3:          #80848e;   /* muted, captions */
+  --pw-fg-4:          #545861;   /* placeholder, disabled */
+  --pw-fg-5:          #3a3d44;
+
+  /* Borders — almost-invisible to assertive */
+  --pw-border:        rgba(255,255,255,0.06);
+  --pw-border-2:      rgba(255,255,255,0.10);
+  --pw-border-3:      rgba(255,255,255,0.16);
+  --pw-border-strong: rgba(255,255,255,0.22);
+
+  /* ---------- Brand ---------- */
+  --pw-brand:         #6E5BF1;   /* signature violet  */
+  --pw-brand-2:       #8E7DFF;   /* hover */
+  --pw-brand-3:       #5945D6;   /* press */
+  --pw-brand-fg:      #ffffff;
+  --pw-brand-tint:    rgba(110, 91, 241, 0.14);
+  --pw-brand-glow:    rgba(110, 91, 241, 0.35);
+
+  --pw-accent:        #4DDFC2;   /* mint / 3D-print teal */
+  --pw-accent-2:      #6EF0D6;
+  --pw-accent-tint:   rgba(77, 223, 194, 0.12);
+
+  /* Brand wave gradient (used sparingly: hero, key marks) */
+  --pw-wave:          linear-gradient(120deg, #6E5BF1 0%, #5C8BFF 45%, #4DDFC2 100%);
+  --pw-wave-soft:     linear-gradient(120deg,
+                        rgba(110,91,241,0.18) 0%,
+                        rgba(92,139,255,0.12) 45%,
+                        rgba(77,223,194,0.18) 100%);
+
+  /* ---------- Semantic ---------- */
+  --pw-success:       #4ADE8A;
+  --pw-success-tint:  rgba(74, 222, 138, 0.12);
+  --pw-warning:       #F4C257;
+  --pw-warning-tint:  rgba(244, 194, 87, 0.12);
+  --pw-danger:        #F87171;
+  --pw-danger-tint:   rgba(248, 113, 113, 0.12);
+  --pw-info:          #5C8BFF;
+  --pw-info-tint:     rgba(92, 139, 255, 0.12);
+
+  /* Print-job semantic (domain-specific) */
+  --pw-printing:      #4DDFC2;
+  --pw-queued:        #80848e;
+  --pw-paused:        #F4C257;
+  --pw-failed:        #F87171;
+  --pw-done:          #4ADE8A;
+
+  /* ---------- Spacing scale (4-pt grid) ---------- */
+  --pw-s-0:   0px;
+  --pw-s-1:   4px;
+  --pw-s-2:   8px;
+  --pw-s-3:   12px;
+  --pw-s-4:   16px;
+  --pw-s-5:   20px;
+  --pw-s-6:   24px;
+  --pw-s-7:   32px;
+  --pw-s-8:   40px;
+  --pw-s-9:   56px;
+  --pw-s-10:  72px;
+  --pw-s-11:  96px;
+  --pw-s-12: 128px;
+
+  /* ---------- Radii ---------- */
+  --pw-r-1:   4px;
+  --pw-r-2:   6px;     /* default control */
+  --pw-r-3:   8px;     /* card */
+  --pw-r-4:  10px;
+  --pw-r-5:  14px;     /* large card */
+  --pw-r-6:  20px;     /* modal */
+  --pw-r-pill: 999px;
+
+  /* ---------- Shadows / elevation (very restrained) ---------- */
+  --pw-shadow-0: 0 0 0 1px var(--pw-border);
+  --pw-shadow-1: 0 1px 0 0 rgba(255,255,255,0.04) inset,
+                 0 1px 2px rgba(0,0,0,0.4);
+  --pw-shadow-2: 0 1px 0 rgba(255,255,255,0.04) inset,
+                 0 4px 16px -4px rgba(0,0,0,0.6),
+                 0 0 0 1px var(--pw-border);
+  --pw-shadow-3: 0 1px 0 rgba(255,255,255,0.05) inset,
+                 0 12px 40px -8px rgba(0,0,0,0.7),
+                 0 0 0 1px var(--pw-border-2);
+  --pw-shadow-modal:
+                 0 1px 0 rgba(255,255,255,0.06) inset,
+                 0 24px 60px -12px rgba(0,0,0,0.7),
+                 0 0 0 1px var(--pw-border-2);
+  --pw-shadow-glow: 0 0 0 1px rgba(110,91,241,0.5),
+                    0 0 24px -4px var(--pw-brand-glow);
+
+  /* Focus ring */
+  --pw-focus: 0 0 0 1.5px var(--pw-bg),
+              0 0 0 3px var(--pw-brand);
+
+  /* ---------- Motion ---------- */
+  --pw-ease:        cubic-bezier(0.32, 0.72, 0, 1);   /* Linear-style */
+  --pw-ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --pw-dur-fast:    120ms;
+  --pw-dur-base:    180ms;
+  --pw-dur-slow:    320ms;
+
+  /* ---------- Type scale ---------- */
+  --pw-font-sans: "Inter", ui-sans-serif, system-ui, -apple-system,
+                   "Segoe UI", Helvetica, Arial, sans-serif;
+  --pw-font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --pw-font-mono: "JetBrains Mono", ui-monospace, "SF Mono",
+                   Menlo, Consolas, monospace;
+
+  /* Sizes — tight, technical, like Linear */
+  --pw-fs-display-1: 64px;   /* hero */
+  --pw-fs-display-2: 48px;
+  --pw-fs-h1:        36px;
+  --pw-fs-h2:        28px;
+  --pw-fs-h3:        20px;
+  --pw-fs-h4:        16px;
+  --pw-fs-body:      14px;   /* default UI body */
+  --pw-fs-body-lg:   16px;   /* marketing copy */
+  --pw-fs-small:     13px;
+  --pw-fs-caption:   12px;
+  --pw-fs-micro:     11px;
+
+  /* Line-heights */
+  --pw-lh-tight:    1.05;
+  --pw-lh-snug:     1.2;
+  --pw-lh-normal:   1.45;
+  --pw-lh-relaxed:  1.6;
+
+  /* Tracking */
+  --pw-tr-tight:   -0.02em;
+  --pw-tr-snug:    -0.01em;
+  --pw-tr-normal:   0;
+  --pw-tr-wide:     0.04em;
+  --pw-tr-mega:     0.08em;
+}
+
+/* =========================================================
+   Semantic element styles — drop in to use
+   ========================================================= */
+html, body {
+  background: var(--pw-bg);
+  color: var(--pw-fg);
+  font-family: var(--pw-font-sans);
+  font-size: var(--pw-fs-body);
+  line-height: var(--pw-lh-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "ss01", "cv11";
+}
+
+.pw-display-1 {
+  font-family: var(--pw-font-display);
+  font-size: var(--pw-fs-display-1);
+  line-height: var(--pw-lh-tight);
+  letter-spacing: var(--pw-tr-tight);
+  font-weight: 600;
+  color: var(--pw-fg);
+}
+.pw-display-2 {
+  font-family: var(--pw-font-display);
+  font-size: var(--pw-fs-display-2);
+  line-height: var(--pw-lh-tight);
+  letter-spacing: var(--pw-tr-tight);
+  font-weight: 600;
+  color: var(--pw-fg);
+}
+.pw-h1 { font-size: var(--pw-fs-h1); line-height: var(--pw-lh-snug);
+         letter-spacing: var(--pw-tr-snug); font-weight: 600; color: var(--pw-fg); }
+.pw-h2 { font-size: var(--pw-fs-h2); line-height: var(--pw-lh-snug);
+         letter-spacing: var(--pw-tr-snug); font-weight: 600; color: var(--pw-fg); }
+.pw-h3 { font-size: var(--pw-fs-h3); line-height: var(--pw-lh-snug);
+         font-weight: 600; color: var(--pw-fg); }
+.pw-h4 { font-size: var(--pw-fs-h4); line-height: var(--pw-lh-normal);
+         font-weight: 600; color: var(--pw-fg); }
+
+.pw-body    { font-size: var(--pw-fs-body);    line-height: var(--pw-lh-normal);
+              color: var(--pw-fg-1); }
+.pw-body-lg { font-size: var(--pw-fs-body-lg); line-height: var(--pw-lh-relaxed);
+              color: var(--pw-fg-2); }
+.pw-small   { font-size: var(--pw-fs-small);   line-height: var(--pw-lh-normal);
+              color: var(--pw-fg-2); }
+.pw-caption { font-size: var(--pw-fs-caption); line-height: var(--pw-lh-normal);
+              color: var(--pw-fg-3); }
+.pw-eyebrow { font-size: var(--pw-fs-caption); line-height: 1;
+              letter-spacing: var(--pw-tr-mega); text-transform: uppercase;
+              color: var(--pw-fg-3); font-weight: 500; }
+.pw-mono    { font-family: var(--pw-font-mono); font-size: var(--pw-fs-small);
+              color: var(--pw-fg-2); }
+.pw-code    { font-family: var(--pw-font-mono); font-size: var(--pw-fs-small);
+              padding: 2px 6px; border-radius: var(--pw-r-1);
+              background: var(--pw-surface-2); color: var(--pw-accent);
+              border: 1px solid var(--pw-border); }
+
+/* Wave-gradient text (use sparingly) */
+.pw-grad-text {
+  background: var(--pw-wave);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+          color: transparent;
+}

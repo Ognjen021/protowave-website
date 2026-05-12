@@ -1,0 +1,1683 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8"/>
+  <title>ProtoWave — od ideje do funkcionalnog prototipa</title>
+  <meta name="viewport" content="width=1280"/>
+  <link rel="icon" href="logo-mark.svg"/>
+  <link rel="stylesheet" href="colors_and_type.css"/>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      background: var(--pw-bg);
+      color: var(--pw-fg);
+      font-family: var(--pw-font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+
+    /* ------------------------------------------------------------------ NAV */
+    .nav {
+      position: sticky; top: 0; z-index: 30;
+      background: rgba(8,9,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--pw-border);
+    }
+    .nav-inner { display: flex; align-items: center; height: 64px; gap: 32px; }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
+    }
+    .nav-brand .sub {
+      font-family: var(--pw-font-mono); font-size: 10px;
+      color: var(--pw-fg-4); margin-left: 4px;
+      padding-left: 10px; border-left: 1px solid var(--pw-border-2);
+      line-height: 1; letter-spacing: 0.04em;
+    }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { font-size: 14px; color: var(--pw-fg-2);
+                   transition: color var(--pw-dur-base) var(--pw-ease); }
+    .nav-links a:hover { color: var(--pw-fg); }
+    .nav-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+    /* ------------------------------------------------------------------ BTN */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      height: 36px; padding: 0 14px;
+      border-radius: var(--pw-r-2);
+      font-size: 14px; font-weight: 500; line-height: 1;
+      border: 1px solid transparent;
+      transition: background var(--pw-dur-base) var(--pw-ease),
+                  border-color var(--pw-dur-base) var(--pw-ease);
+    }
+    .btn-primary {
+      background: var(--pw-brand); color: #fff;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.18) inset;
+    }
+    .btn-primary:hover { background: var(--pw-brand-2); }
+    .btn-secondary {
+      background: var(--pw-surface-2);
+      border-color: var(--pw-border-2);
+      color: var(--pw-fg);
+    }
+    .btn-secondary:hover { background: var(--pw-surface-3); border-color: var(--pw-border-3); }
+    .btn-ghost { color: var(--pw-fg-2); }
+    .btn-ghost:hover { color: var(--pw-fg); }
+    .btn-lg { height: 44px; padding: 0 20px; font-size: 15px; }
+
+    /* ------------------------------------------------------------------ SECTION */
+    .section { padding: 96px 0; border-bottom: 1px solid var(--pw-border); }
+    .section-eyebrow {
+      font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--pw-fg-3); font-weight: 500;
+    }
+    .section-title {
+      font-size: 40px; font-weight: 600; letter-spacing: -0.02em;
+      line-height: 1.1; color: var(--pw-fg); margin: 12px 0 0; max-width: 720px;
+    }
+    .section-sub {
+      font-size: 17px; color: var(--pw-fg-2); margin-top: 14px; max-width: 640px;
+    }
+
+    /* ------------------------------------------------------------------ HERO */
+    .hero { padding: 96px 0 72px; position: relative; overflow: hidden; }
+    .hero-bg {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(60% 50% at 25% 30%, rgba(110,91,241,0.18), transparent 60%),
+        radial-gradient(50% 40% at 85% 80%, rgba(77,223,194,0.10), transparent 60%);
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 4px 12px 4px 6px; border-radius: 999px;
+      background: var(--pw-surface); border: 1px solid var(--pw-border-2);
+      font-size: 12px; color: var(--pw-fg-2);
+    }
+    .hero-eyebrow .badge {
+      padding: 2px 8px; background: var(--pw-brand-tint); color: #B5A8FF;
+      border-radius: 999px; font-size: 10px; letter-spacing: 0.06em;
+      text-transform: uppercase; font-weight: 600;
+    }
+    .hero-eyebrow .arr { color: var(--pw-fg-3); }
+    .hero h1 {
+      font-size: 72px; font-weight: 600; letter-spacing: -0.03em;
+      line-height: 1.02; margin: 24px 0 0; color: var(--pw-fg);
+      max-width: 920px; text-wrap: balance;
+    }
+    .hero h1 .grad {
+      background: linear-gradient(120deg,#6E5BF1,#5C8BFF,#4DDFC2);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
+    .hero p.lede {
+      font-size: 19px; color: var(--pw-fg-2);
+      margin: 24px 0 32px; max-width: 620px; line-height: 1.55;
+      text-wrap: pretty;
+    }
+    .hero-cta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .hero-cta .meta {
+      font-size: 13px; color: var(--pw-fg-3); margin-left: 6px;
+      font-family: var(--pw-font-mono);
+    }
+
+    /* KPI row under hero */
+    .kpis {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px; margin-top: 56px;
+      padding-top: 32px; border-top: 1px solid var(--pw-border);
+    }
+    .kpi .k {
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--pw-fg-4); font-weight: 500;
+    }
+    .kpi .v {
+      margin-top: 8px; font-size: 22px; font-weight: 600;
+      letter-spacing: -0.01em; color: var(--pw-fg);
+    }
+    .kpi .v .unit { font-size: 13px; color: var(--pw-fg-3); margin-left: 4px; font-weight: 400; }
+    .kpi .d { margin-top: 6px; font-size: 13px; color: var(--pw-fg-3); }
+
+    /* ------------------------------------------------------------------ HERO PRODUCT MOCK */
+    .hero-product {
+      margin-top: 64px; border-radius: 14px;
+      border: 1px solid var(--pw-border-2);
+      background: var(--pw-bg-2);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset,
+                  0 24px 60px -12px rgba(0,0,0,0.7);
+      overflow: hidden;
+    }
+    .hero-product-bar {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--pw-border);
+      background: var(--pw-bg);
+    }
+    .hero-product-bar .dot-row { display: flex; gap: 6px; }
+    .hero-product-bar .dot-row span {
+      width: 10px; height: 10px; border-radius: 99px; background: var(--pw-surface-3);
+    }
+    .hero-product-bar .crumb {
+      font-size: 12px; color: var(--pw-fg-3); margin-left: 12px;
+      font-family: var(--pw-font-mono);
+    }
+    .hero-product-bar .right {
+      margin-left: auto; display: flex; align-items: center; gap: 8px;
+      font-size: 11px; color: var(--pw-fg-4); font-family: var(--pw-font-mono);
+    }
+
+    .mock { display: grid; grid-template-columns: 220px 1fr 300px; height: 400px; }
+    .mock-sb {
+      border-right: 1px solid var(--pw-border);
+      padding: 14px 10px; display: flex; flex-direction: column; gap: 2px;
+    }
+    .mock-sb .lbl {
+      font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--pw-fg-4); padding: 10px 8px 6px;
+    }
+    .mock-sb .it {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 8px; border-radius: 6px;
+      font-size: 12px; color: var(--pw-fg-2);
+    }
+    .mock-sb .it.active {
+      background: var(--pw-surface-2);
+      color: var(--pw-fg);
+      border: 1px solid var(--pw-border-2);
+    }
+    .mock-sb .it .c {
+      margin-left: auto; font-family: var(--pw-font-mono);
+      font-size: 10px; color: var(--pw-fg-4);
+    }
+    .mock-sb svg { width: 14px; height: 14px; }
+
+    .mock-main {
+      padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;
+      min-width: 0;
+    }
+    .mock-main .h {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .mock-main .h .t { font-size: 14px; font-weight: 600; }
+    .mock-main .h .sub {
+      font-size: 11px; color: var(--pw-fg-4);
+      font-family: var(--pw-font-mono); margin-top: 2px;
+    }
+    .mock-main .h .actions { display: flex; gap: 6px; }
+    .chip-s {
+      background: var(--pw-surface-2); color: var(--pw-fg-2);
+      border: 1px solid var(--pw-border-2);
+      padding: 0 8px; height: 22px; border-radius: 999px;
+      font-size: 10px; display: inline-flex; align-items: center;
+    }
+    .chip-p {
+      background: var(--pw-brand); color: #fff;
+      padding: 0 10px; height: 22px; border-radius: 6px;
+      font-size: 11px; display: inline-flex; align-items: center;
+      font-weight: 500;
+    }
+
+    .mock-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--pw-border); border-radius: 8px;
+      background: var(--pw-surface); font-size: 12px;
+    }
+    .mock-row .dot { width: 6px; height: 6px; border-radius: 99px; flex: 0 0 6px; }
+    .mock-row .name { font-weight: 500; color: var(--pw-fg-1); min-width: 0;
+                      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px;}
+    .mock-row .st {
+      font-size: 10px; font-family: var(--pw-font-mono);
+      padding: 0 6px; height: 18px; border-radius: 4px;
+      display: inline-flex; align-items: center;
+    }
+    .mock-row .meta {
+      color: var(--pw-fg-3); margin-left: auto;
+      font-family: var(--pw-font-mono); font-size: 10px;
+    }
+
+    .mock-rail {
+      border-left: 1px solid var(--pw-border);
+      padding: 16px; display: flex; flex-direction: column; gap: 14px;
+      background: var(--pw-bg-2);
+    }
+    .mock-rail .top { display: flex; justify-content: space-between; align-items: center; }
+    .pill-printing {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 2px 8px; border-radius: 999px;
+      background: rgba(77,223,194,0.10);
+      border: 1px solid rgba(77,223,194,0.32);
+      color: #4DDFC2; font-size: 10px; font-weight: 500;
+    }
+    .pill-printing .d {
+      width: 5px; height: 5px; border-radius: 99px;
+      background: #4DDFC2; box-shadow: 0 0 4px #4DDFC2;
+    }
+    .rail-id { font-size: 10px; font-family: var(--pw-font-mono); color: var(--pw-fg-4); }
+    .rail-title { font-size: 14px; font-weight: 600; color: var(--pw-fg); }
+    .rail-meta { font-size: 11px; font-family: var(--pw-font-mono); color: var(--pw-fg-3); margin-top: 2px; }
+    .rail-bar { height: 4px; background: var(--pw-bg); border-radius: 99px; overflow: hidden; }
+    .rail-bar > div { height: 100%; background: linear-gradient(90deg,#6E5BF1,#4DDFC2); }
+    .rail-prog {
+      display: flex; justify-content: space-between; margin-top: 6px;
+      font-size: 11px; font-family: var(--pw-font-mono); color: var(--pw-fg-3);
+    }
+    .rail-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+      padding-top: 12px; border-top: 1px solid var(--pw-border);
+    }
+    .rail-grid .k {
+      font-size: 10px; color: var(--pw-fg-4);
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .rail-grid .v { font-size: 12px; margin-top: 2px; color: var(--pw-fg-1);
+                    font-family: var(--pw-font-mono); }
+
+    /* ------------------------------------------------------------------ LOGOS */
+    .logos { padding: 56px 0; border-bottom: 1px solid var(--pw-border); }
+    .logos-label {
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--pw-fg-4); text-align: center; font-weight: 500;
+    }
+    .logos-row {
+      display: grid; grid-template-columns: repeat(6, 1fr);
+      gap: 32px; align-items: center; margin-top: 28px;
+    }
+    .logos-row span {
+      color: var(--pw-fg-3); font-size: 17px; font-weight: 600;
+      letter-spacing: -0.02em; text-align: center; opacity: 0.7;
+      transition: opacity var(--pw-dur-base) var(--pw-ease),
+                  color var(--pw-dur-base) var(--pw-ease);
+    }
+    .logos-row span:hover { opacity: 1; color: var(--pw-fg); }
+
+    /* ------------------------------------------------------------------ SERVICES */
+    .services {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 16px; margin-top: 56px;
+    }
+    .feat {
+      padding: 24px;
+      background: var(--pw-surface);
+      border: 1px solid var(--pw-border);
+      border-radius: 12px;
+      transition: border-color var(--pw-dur-base) var(--pw-ease),
+                  background var(--pw-dur-base) var(--pw-ease);
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .feat:hover { border-color: var(--pw-border-2); background: var(--pw-surface-2); }
+    .feat-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--pw-surface-2);
+      border: 1px solid var(--pw-border-2);
+      color: var(--pw-accent);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .feat h3 { font-size: 16px; font-weight: 600; margin: 0; color: var(--pw-fg); }
+    .feat p {
+      font-size: 14px; line-height: 1.55; color: var(--pw-fg-3);
+      margin: 0; text-wrap: pretty;
+    }
+    .feat .tag {
+      margin-top: 12px; padding-top: 12px;
+      border-top: 1px solid var(--pw-border);
+      font-size: 11px; font-family: var(--pw-font-mono); color: var(--pw-fg-4);
+      display: flex; justify-content: space-between;
+    }
+    .feat .tag .more { color: var(--pw-accent); }
+
+    /* ------------------------------------------------------------------ PROCESS */
+    .process-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px; margin-top: 56px;
+    }
+    .step {
+      padding: 28px;
+      border: 1px solid var(--pw-border); border-radius: 12px;
+      background: var(--pw-surface);
+      display: flex; gap: 20px; align-items: flex-start;
+    }
+    .step .num {
+      font-family: var(--pw-font-mono);
+      font-size: 11px; letter-spacing: 0.08em;
+      color: var(--pw-fg-4); padding-top: 2px; flex-shrink: 0;
+      width: 36px;
+    }
+    .step .body { display: flex; flex-direction: column; gap: 6px; }
+    .step h3 { font-size: 18px; font-weight: 600; margin: 0; color: var(--pw-fg);
+               letter-spacing: -0.01em; }
+    .step p { font-size: 14px; color: var(--pw-fg-3); margin: 0; line-height: 1.55; }
+    .step .deliv {
+      margin-top: 10px; font-size: 11px; font-family: var(--pw-font-mono);
+      color: var(--pw-fg-4);
+    }
+    .step .deliv b { color: var(--pw-fg-2); font-weight: 500; }
+
+    /* ------------------------------------------------------------------ MATERIALS */
+    .materials-wrap {
+      margin-top: 56px;
+      display: grid; grid-template-columns: 1fr 1.4fr;
+      gap: 32px; align-items: start;
+    }
+    .mat-side {
+      padding: 28px;
+      border: 1px solid var(--pw-border); border-radius: 12px;
+      background: var(--pw-bg-2);
+    }
+    .mat-side .label {
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--pw-fg-4); font-weight: 500; margin-bottom: 16px;
+    }
+    .mat-side h3 {
+      font-size: 22px; font-weight: 600; letter-spacing: -0.01em;
+      margin: 0 0 12px; color: var(--pw-fg);
+    }
+    .mat-side p { font-size: 14px; color: var(--pw-fg-3); margin: 0; line-height: 1.6; }
+
+    .mat-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .mat {
+      display: grid;
+      grid-template-columns: 36px 1fr auto;
+      gap: 12px; align-items: center;
+      padding: 14px 16px;
+      border: 1px solid var(--pw-border); border-radius: 10px;
+      background: var(--pw-surface);
+      transition: border-color var(--pw-dur-base) var(--pw-ease),
+                  background var(--pw-dur-base) var(--pw-ease);
+    }
+    .mat:hover { background: var(--pw-surface-2); border-color: var(--pw-border-2); }
+    .mat .id {
+      font-family: var(--pw-font-mono); font-size: 10px;
+      color: var(--pw-fg-4); letter-spacing: 0.04em;
+    }
+    .mat .name { font-size: 13px; font-weight: 500; color: var(--pw-fg); }
+    .mat .spec { font-size: 11px; font-family: var(--pw-font-mono); color: var(--pw-fg-3); }
+
+    /* ------------------------------------------------------------------ CONTACT */
+    .contact { padding: 112px 0; position: relative; overflow: hidden; }
+    .contact::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(60% 60% at 50% 100%, rgba(110,91,241,0.18), transparent 60%);
+    }
+    .contact-inner {
+      display: grid; grid-template-columns: 1.1fr 0.9fr;
+      gap: 64px; align-items: center; position: relative;
+    }
+    .contact h2 {
+      font-size: 56px; font-weight: 600; letter-spacing: -0.02em;
+      line-height: 1.05; margin: 12px 0 0; max-width: 560px;
+      text-wrap: balance;
+    }
+    .contact p { font-size: 17px; color: var(--pw-fg-2); margin: 18px 0 0; max-width: 520px; line-height: 1.55; }
+    .contact-card {
+      padding: 28px;
+      border: 1px solid var(--pw-border-2); border-radius: 14px;
+      background: var(--pw-surface);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.05) inset,
+                  0 12px 40px -8px rgba(0,0,0,0.6);
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .contact-card .row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--pw-border); border-radius: 8px;
+      background: var(--pw-bg-2);
+    }
+    .contact-card .row .k {
+      font-size: 11px; color: var(--pw-fg-4);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      width: 88px;
+    }
+    .contact-card .row .v {
+      font-size: 13px; color: var(--pw-fg); font-family: var(--pw-font-mono);
+    }
+    .contact-card .next {
+      font-size: 11px; font-family: var(--pw-font-mono); color: var(--pw-fg-4);
+      text-align: center; margin-top: 4px;
+    }
+
+    /* ------------------------------------------------------------------ FOOTER */
+    .footer {
+      padding: 56px 0 32px;
+      border-top: 1px solid var(--pw-border);
+      color: var(--pw-fg-3); font-size: 13px;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 1.4fr repeat(4, 1fr);
+      gap: 32px; margin-bottom: 40px;
+    }
+    .footer-col h4 {
+      font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--pw-fg-4); font-weight: 500; margin: 0 0 12px;
+    }
+    .footer-col a { display: block; color: var(--pw-fg-2); padding: 6px 0; }
+    .footer-col a:hover { color: var(--pw-fg); }
+    .footer-bot {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 24px; border-top: 1px solid var(--pw-border);
+      font-family: var(--pw-font-mono); font-size: 11px; color: var(--pw-fg-4);
+    }
+
+    /* small icon helper */
+    .ico { width: 16px; height: 16px; }
+    .ico-lg { width: 20px; height: 20px; }
+
+    /* ============================================================ HERO 3D VIZ */
+    .hero-viz {
+      position: relative; height: 720px;
+      background:
+        radial-gradient(60% 80% at 50% 90%, rgba(110,91,241,0.10), transparent 70%),
+        var(--pw-bg-2);
+      overflow: hidden;
+    }
+    /* engineering graph paper */
+    .hero-viz::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(60% 60% at 50% 50%, #000 30%, transparent 90%);
+    }
+    .viz-pane {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity var(--pw-dur-slow) var(--pw-ease);
+      pointer-events: none;
+    }
+    .hero-product[data-variant="layer-build"] .viz-pane[data-pane="layer-build"],
+    .hero-product[data-variant="exploded"]    .viz-pane[data-pane="exploded"],
+    .hero-product[data-variant="toolpath"]    .viz-pane[data-pane="toolpath"]   {
+      opacity: 1; pointer-events: auto;
+    }
+    .viz-svg { width: 100%; height: 100%; display: block; }
+
+    /* ── HUD overlays (annotations) ───────────────────────── */
+    .hud {
+      position: absolute; pointer-events: none;
+      font-family: var(--pw-font-mono); font-size: 11px;
+      color: var(--pw-fg-3); letter-spacing: 0.02em;
+      transition: opacity var(--pw-dur-base) var(--pw-ease);
+    }
+    .hero-product[data-annotate="0"] .hud { opacity: 0; }
+    .hud-card {
+      background: rgba(8,9,10,0.72);
+      border: 1px solid var(--pw-border-2);
+      backdrop-filter: blur(6px);
+      padding: 8px 10px; border-radius: 8px;
+      display: flex; flex-direction: column; gap: 4px;
+      min-width: 140px;
+    }
+    .hud-card .k {
+      font-size: 9px; letter-spacing: 0.10em; text-transform: uppercase;
+      color: var(--pw-fg-4); font-weight: 500;
+    }
+    .hud-card .v { color: var(--pw-fg); font-size: 12px; }
+    .hud-card .v .u { color: var(--pw-fg-3); margin-left: 3px; }
+    .hud-card .row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+
+    .hud-tl { top: 16px; left: 18px; }
+    .hud-tr { top: 16px; right: 18px; }
+    .hud-bl { bottom: 16px; left: 18px; }
+    .hud-br { bottom: 16px; right: 18px; }
+
+    /* progress bar inside HUD */
+    .hud-prog {
+      width: 220px; height: 5px;
+      background: var(--pw-bg); border-radius: 99px;
+      border: 1px solid var(--pw-border); overflow: hidden;
+    }
+    .hud-prog > div {
+      height: 100%; background: linear-gradient(90deg,#6E5BF1,#5C8BFF,#4DDFC2);
+      box-shadow: 0 0 8px rgba(77,223,194,0.5);
+    }
+
+    .hud-row {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 9px;
+      background: rgba(8,9,10,0.65);
+      border: 1px solid var(--pw-border-2);
+      border-radius: 99px;
+      color: var(--pw-fg-2); font-size: 11px;
+      font-family: var(--pw-font-mono);
+    }
+    .hud-row .live-dot {
+      width: 6px; height: 6px; border-radius: 99px;
+      background: #4DDFC2; box-shadow: 0 0 6px #4DDFC2;
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.35; }
+    }
+
+    /* axis gizmo */
+    .gizmo {
+      position: absolute; bottom: 16px; left: 18px;
+      width: 64px; height: 64px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--pw-fg-3);
+    }
+
+    /* dimension lines (sr labels for callouts) */
+    .dim {
+      font-family: var(--pw-font-mono); font-size: 11px;
+      fill: var(--pw-fg-3);
+    }
+    .dim-line  { stroke: var(--pw-fg-5); stroke-width: 1; }
+    .dim-tick  { stroke: var(--pw-fg-4); stroke-width: 1; }
+    .callout-line { stroke: var(--pw-fg-5); stroke-width: 1; stroke-dasharray: 2 3; }
+
+    /* layer build SVG */
+    .layer-line { stroke: rgba(255,255,255,0.045); stroke-width: 1; }
+    .face       { fill: var(--pw-surface-2); stroke: rgba(255,255,255,0.10); stroke-width: 1; }
+    .face-top   { fill: url(#wave-top); stroke: rgba(255,255,255,0.18); stroke-width: 1; }
+    .face-dark  { fill: var(--pw-surface); stroke: rgba(255,255,255,0.08); stroke-width: 1; }
+    .plate      { fill: #0b0c0e; stroke: rgba(255,255,255,0.12); stroke-width: 1; }
+    .plate-grid { stroke: rgba(255,255,255,0.04); stroke-width: 0.5; }
+    .nozzle     { fill: var(--pw-surface-3); stroke: rgba(255,255,255,0.18); stroke-width: 1; }
+    .extrude    { stroke: #4DDFC2; stroke-width: 1.5; opacity: 0.9; }
+    @keyframes glow-pulse {
+      0%, 100% { filter: drop-shadow(0 0 6px rgba(77,223,194,0.55)); }
+      50%      { filter: drop-shadow(0 0 14px rgba(110,91,241,0.55)); }
+    }
+    .glow-top { animation: glow-pulse 3.4s ease-in-out infinite; transform-origin: center; }
+    /* unbuilt ghost outline */
+    .ghost { fill: none; stroke: rgba(255,255,255,0.10); stroke-width: 1; stroke-dasharray: 3 4; }
+    .ghost-edge { stroke: rgba(255,255,255,0.06); stroke-width: 1; stroke-dasharray: 2 4; }
+    /* extrusion bead at the active layer */
+    .bead { fill: none; stroke: #4DDFC2; stroke-width: 1.8; stroke-linecap: round;
+            filter: drop-shadow(0 0 4px rgba(77,223,194,0.7)); }
+    /* nozzle orbital toolpath (simulated drawing) */
+    @keyframes nozzle-orbit {
+        0% { transform: translate(  20px,  -8px); }
+       25% { transform: translate(  44px,  -2px); }
+       50% { transform: translate(  18px,   6px); }
+       75% { transform: translate( -10px,   2px); }
+      100% { transform: translate(  20px,  -8px); }
+    }
+    #nozzle-orbit { animation: nozzle-orbit 6s linear infinite; transform-box: fill-box; }
+    /* extruded filament trail (the line from nozzle tip down) */
+    @keyframes extrude-flow {
+       0%   { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: -12; }
+    }
+    .extrude { animation: extrude-flow 1.2s linear infinite; }
+
+    /* toolpath */
+    .tp-outer { stroke: #4DDFC2;  stroke-width: 1.3; fill: none; }
+    .tp-wall  { stroke: #5C8BFF;  stroke-width: 1.0; fill: none; opacity: 0.85; }
+    .tp-fill  { stroke: #6E5BF1;  stroke-width: 0.85; fill: none; opacity: 0.55; }
+    .tp-skirt { stroke: var(--pw-fg-5); stroke-width: 0.8; fill: none; stroke-dasharray: 3 3; }
+    .tp-head  { fill: var(--pw-bg); stroke: #4DDFC2; stroke-width: 1.4; }
+    @keyframes head-travel {
+      0%   { offset-distance: 0%; }
+      100% { offset-distance: 100%; }
+    }
+
+    /* exploded */
+    .expl-shadow { fill: rgba(0,0,0,0.4); }
+    .expl-axis   { stroke: var(--pw-fg-5); stroke-width: 1; stroke-dasharray: 4 4; }
+    .expl-num    { fill: var(--pw-fg); font-family: var(--pw-font-mono); font-size: 11px; font-weight: 500; }
+    .expl-num-bg { fill: var(--pw-surface-3); stroke: var(--pw-border-3); stroke-width: 1; }
+    .expl-tag-bg { fill: var(--pw-surface); stroke: var(--pw-border); }
+    .expl-tag-t  { fill: var(--pw-fg-1); font-family: var(--pw-font-sans); font-size: 11px; font-weight: 500; }
+    .expl-tag-s  { fill: var(--pw-fg-4); font-family: var(--pw-font-mono); font-size: 10px; }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- ============================================================== NAV -->
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="nav-brand" href="#">
+        <svg width="22" height="22" viewBox="0 0 36 36" fill="none">
+          <defs>
+            <linearGradient id="lg-nav" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#6E5BF1"/>
+              <stop offset="0.55" stop-color="#5C8BFF"/>
+              <stop offset="1" stop-color="#4DDFC2"/>
+            </linearGradient>
+          </defs>
+          <rect x="2"  y="22" width="32" height="3" rx="1.5" fill="url(#lg-nav)" opacity="0.55"/>
+          <rect x="4"  y="16" width="28" height="3" rx="1.5" fill="url(#lg-nav)" opacity="0.75"/>
+          <rect x="7"  y="10" width="22" height="3" rx="1.5" fill="url(#lg-nav)" opacity="0.9"/>
+          <rect x="11" y="4"  width="14" height="3" rx="1.5" fill="url(#lg-nav)"/>
+        </svg>
+        ProtoWave
+        <span class="sub">CAD · 3D štampa · skeniranje · automatizacija</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#usluge">Usluge</a>
+        <a href="#proces">Proces</a>
+        <a href="#materijali">Materijali</a>
+        <a href="#primena">Primena</a>
+        <a href="Kontakt.html#calc">Kalkulator ponude</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-ghost" href="#prijava">
+</a>
+        <a class="btn btn-primary" href="Kontakt.html">Kontakt</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================== HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="wrap" style="position:relative">
+      <span class="hero-eyebrow">
+        <span class="badge">Novo</span>
+        Otvoren upload STL · STEP · IGES — instant procena
+        <svg class="ico arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M5 12h14M13 6l6 6-6 6"/>
+        </svg>
+      </span>
+
+      <h1>
+        Od ideje do funkcionalnog prototipa.<br/>
+        <span class="grad">Brže. Pametnije. Preciznije.</span>
+      </h1>
+
+      <p class="lede">
+        ProtoWave je inženjerski studio za firme i timove kojima treba pouzdan partner za CAD konstrukciju, 3D štampu, skeniranje i namensku automatizaciju. Jedan kontakt, jedan tok, od skice do isporučenog dela.
+      </p>
+
+      <div class="hero-cta">
+        <a class="btn btn-primary btn-lg" href="Kontakt.html">Kontaktiraj nas</a>
+        <a class="btn btn-secondary btn-lg" href="Kontakt.html#calc">Kalkulator ponude</a>
+        <span class="meta">odgovor u roku od 24h</span>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpis">
+        <div class="kpi">
+          <div class="k">Tipično vreme izrade</div>
+          <div class="v">1–3 <span class="unit">dana</span></div>
+          <div class="d">prototipi do ~250 g, jedna iteracija</div>
+        </div>
+        <div class="kpi">
+          <div class="k">Poverljivost</div>
+          <div class="v">NDA <span class="unit">spreman</span></div>
+          <div class="d">potpisujemo pre prvog fajla</div>
+        </div>
+        <div class="kpi">
+          <div class="k">Isporuka</div>
+          <div class="v">EU <span class="unit">+ region</span></div>
+          <div class="d">Srbija, BiH, HR</div>
+        </div>
+        <div class="kpi">
+          <div class="k">Materijala u ponudi</div>
+          <div class="v">24<span class="unit">+</span></div>
+          <div class="d">PLA · PETG · TPU · ABS · CF · Resin</div>
+        </div>
+      </div>
+
+      <!-- 3D print visual -->
+      <div class="hero-product" id="hero-3d" data-variant="layer-build" data-annotate="1">
+        <div class="hero-product-bar">
+          <div class="dot-row"><span></span><span></span><span></span></div>
+          <span class="crumb">protowave.studio / proizvodnja / industrijski-drzac-v3.gcode</span>
+          <span class="right">
+            <span style="width:6px;height:6px;border-radius:99px;background:#4DDFC2;box-shadow:0 0 4px #4DDFC2"></span>
+            uživo
+          </span>
+        </div>
+
+        <div class="hero-viz">
+
+          <!-- ───── PANE 1: LAYER BUILD (isometric) ───── -->
+          <div class="viz-pane" data-pane="layer-build">
+            <svg class="viz-svg" viewBox="0 0 800 440" preserveAspectRatio="xMidYMid meet" style="height: 600px">
+              <defs>
+                <linearGradient id="wave-top" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0"    stop-color="#6E5BF1"/>
+                  <stop offset="0.55" stop-color="#5C8BFF"/>
+                  <stop offset="1"    stop-color="#4DDFC2"/>
+                </linearGradient>
+                <linearGradient id="layer-fade-r" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#1f2127"/>
+                  <stop offset="1" stop-color="#131418"/>
+                </linearGradient>
+                <linearGradient id="layer-fade-l" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#181a1f"/>
+                  <stop offset="1" stop-color="#0e0f11"/>
+                </linearGradient>
+                <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="6"/>
+                </filter>
+              </defs>
+
+              <g transform="translate(400 250)">
+                <!-- build plate (z=0), iso rhombus, plate L = 200 -->
+                <polygon class="plate" points="346.4,0 0,200 -346.4,0 0,-200"/>
+                <!-- plate grid: a few cross lines for engineering vibe -->
+                <g class="plate-grid">
+                  <line x1="-173.2" y1="-100" x2="173.2"  y2="100"/>
+                  <line x1="-86.6"  y1="-50"  x2="259.8"  y2="150"/>
+                  <line x1="-259.8" y1="-150" x2="86.6"   y2="50"/>
+                  <line x1="-173.2" y1="100"  x2="173.2"  y2="-100"/>
+                  <line x1="-86.6"  y1="50"   x2="259.8"  y2="-150"/>
+                  <line x1="-259.8" y1="150"  x2="86.6"   y2="-50"/>
+                </g>
+
+                <!-- part: extruded rectangular block, L=90, H=160 -->
+                <!-- ghost outline: full part at H=160 (what is still to build) -->
+                <g class="ghost">
+                  <polygon class="ghost-edge" points="0,90 155.9,0 0,-90 -155.9,0"/>
+                  <polygon points="0,-70 155.9,-160 0,-250 -155.9,-160"/>
+                  <line x1="155.9"  y1="0" x2="155.9"  y2="-160"/>
+                  <line x1="-155.9" y1="0" x2="-155.9" y2="-160"/>
+                  <line x1="0"     y1="90" x2="0"     y2="-70"/>
+                  <line x1="0"     y1="-90" x2="0"    y2="-250"/>
+                </g>
+                <!-- left face (y = +L plane), darker — points driven by progress -->
+                <polygon id="face-left" class="face-dark" fill="url(#layer-fade-l)"
+                  points="-155.9,0 0,90 0,-70 -155.9,-160"/>
+                <!-- right face (x = +L plane), lighter — points driven by progress -->
+                <polygon id="face-right" class="face" fill="url(#layer-fade-r)"
+                  points="155.9,0 0,90 0,-70 155.9,-160"/>
+
+                <!-- layer lines on left and right faces — JS hides lines above current build height -->
+                <g id="layer-lines" class="layer-line">
+                  <!-- 18 layers on right face -->
+                  <line x1="0"     y1="82"   x2="155.9" y2="-8"/>
+                  <line x1="0"     y1="74"   x2="155.9" y2="-16"/>
+                  <line x1="0"     y1="66"   x2="155.9" y2="-24"/>
+                  <line x1="0"     y1="58"   x2="155.9" y2="-32"/>
+                  <line x1="0"     y1="50"   x2="155.9" y2="-40"/>
+                  <line x1="0"     y1="42"   x2="155.9" y2="-48"/>
+                  <line x1="0"     y1="34"   x2="155.9" y2="-56"/>
+                  <line x1="0"     y1="26"   x2="155.9" y2="-64"/>
+                  <line x1="0"     y1="18"   x2="155.9" y2="-72"/>
+                  <line x1="0"     y1="10"   x2="155.9" y2="-80"/>
+                  <line x1="0"     y1="2"    x2="155.9" y2="-88"/>
+                  <line x1="0"     y1="-6"   x2="155.9" y2="-96"/>
+                  <line x1="0"     y1="-14"  x2="155.9" y2="-104"/>
+                  <line x1="0"     y1="-22"  x2="155.9" y2="-112"/>
+                  <line x1="0"     y1="-30"  x2="155.9" y2="-120"/>
+                  <line x1="0"     y1="-38"  x2="155.9" y2="-128"/>
+                  <line x1="0"     y1="-46"  x2="155.9" y2="-136"/>
+                  <line x1="0"     y1="-54"  x2="155.9" y2="-144"/>
+                  <line x1="0"     y1="-62"  x2="155.9" y2="-152"/>
+                  <!-- left face -->
+                  <line x1="-155.9" y1="-8"   x2="0" y2="82"/>
+                  <line x1="-155.9" y1="-16"  x2="0" y2="74"/>
+                  <line x1="-155.9" y1="-24"  x2="0" y2="66"/>
+                  <line x1="-155.9" y1="-32"  x2="0" y2="58"/>
+                  <line x1="-155.9" y1="-40"  x2="0" y2="50"/>
+                  <line x1="-155.9" y1="-48"  x2="0" y2="42"/>
+                  <line x1="-155.9" y1="-56"  x2="0" y2="34"/>
+                  <line x1="-155.9" y1="-64"  x2="0" y2="26"/>
+                  <line x1="-155.9" y1="-72"  x2="0" y2="18"/>
+                  <line x1="-155.9" y1="-80"  x2="0" y2="10"/>
+                  <line x1="-155.9" y1="-88"  x2="0" y2="2"/>
+                  <line x1="-155.9" y1="-96"  x2="0" y2="-6"/>
+                  <line x1="-155.9" y1="-104" x2="0" y2="-14"/>
+                  <line x1="-155.9" y1="-112" x2="0" y2="-22"/>
+                  <line x1="-155.9" y1="-120" x2="0" y2="-30"/>
+                  <line x1="-155.9" y1="-128" x2="0" y2="-38"/>
+                  <line x1="-155.9" y1="-136" x2="0" y2="-46"/>
+                  <line x1="-155.9" y1="-144" x2="0" y2="-54"/>
+                  <line x1="-155.9" y1="-152" x2="0" y2="-62"/>
+                </g>
+
+                <!-- top face (active extrusion) with glow — driven by progress -->
+                <g id="glow-top" class="glow-top">
+                  <polygon id="face-top" class="face-top"
+                    points="0,-70 155.9,-160 0,-250 -155.9,-160"/>
+                  <!-- inner cavity, suggesting a hole -->
+                  <polygon id="face-cavity" fill="var(--pw-bg-2)" stroke="rgba(255,255,255,0.18)" stroke-width="1"
+                    points="0,-110 77.9,-155 0,-200 -77.9,-155"/>
+                  <!-- active extrusion bead — outer perimeter of top, drawn by nozzle -->
+                  <polygon id="bead-top" class="bead"
+                    points="0,-70 155.9,-160 0,-250 -155.9,-160"/>
+                </g>
+
+                <!-- nozzle removed per design -->
+                <g id="nozzle-pos" transform="translate(0 -195)" style="display:none">
+                  <g id="nozzle-orbit">
+                    <!-- gantry hint: thin rod above the toolhead -->
+                    <line x1="-60" y1="-44" x2="60" y2="-44" stroke="rgba(255,255,255,0.10)" stroke-width="1"/>
+                  </g>
+                </g>
+
+                <!-- dim line on right edge of part -->
+                <g class="dim">
+                  <line class="dim-line" x1="170" y1="8"   x2="200" y2="23"/>
+                  <line class="dim-line" x1="170" y1="-152" x2="200" y2="-137"/>
+                  <line class="dim-line" x1="200" y1="23"  x2="200" y2="-137"/>
+                  <line class="dim-tick" x1="196" y1="23"  x2="204" y2="23"/>
+                  <line class="dim-tick" x1="196" y1="-137" x2="204" y2="-137"/>
+                  <text x="208" y="-54" transform="rotate(60 208 -54)">62.0 mm</text>
+                </g>
+              </g>
+
+              <!-- coord gizmo bottom-right -->
+              <g transform="translate(736 384)" class="dim">
+                <line stroke="#F87171" stroke-width="1.5" x1="0" y1="0" x2="26" y2="-15"/>
+                <line stroke="#4ADE8A" stroke-width="1.5" x1="0" y1="0" x2="-26" y2="-15"/>
+                <line stroke="#5C8BFF" stroke-width="1.5" x1="0" y1="0" x2="0" y2="-28"/>
+                <text x="29" y="-15" fill="#F87171">X</text>
+                <text x="-36" y="-15" fill="#4ADE8A">Y</text>
+                <text x="-3" y="-32" fill="#5C8BFF">Z</text>
+              </g>
+            </svg>
+
+            <!-- HUDs -->
+            <div class="hud hud-tl">
+              <div class="hud-card">
+                <div class="row">
+                  <span class="k">Projekat</span>
+                  <span style="font-size:9px;color:var(--pw-fg-4)">proj_8a73f1</span>
+                </div>
+                <div class="v" style="font-family:var(--pw-font-sans);font-weight:600">Industrijski držač v3</div>
+                <div class="row">
+                  <span class="k">Materijal</span>
+                  <span class="v">PETG-CF<span class="u">· 0.20 mm</span></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hud hud-tr">
+              <span class="hud-row">
+                <span class="live-dot"></span>U štampi · MK4-02
+              </span>
+            </div>
+
+            <div class="hud hud-bl">
+              <div class="hud-card">
+                <div class="row"><span class="k">Sloj</span><span class="v" id="hud-layer">482<span class="u">/ 612</span></span></div>
+                <div class="hud-prog"><div id="hud-prog-bar" style="width:78%"></div></div>
+                <div class="row">
+                  <span style="font-family:var(--pw-font-mono);font-size:11px;color:var(--pw-fg-2)" id="hud-pct">78%</span>
+                  <span style="font-family:var(--pw-font-mono);font-size:11px;color:var(--pw-fg-3)">ETA 04:21</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───── PANE 2: EXPLODED VIEW ───── -->
+          <div class="viz-pane" data-pane="exploded">
+            <svg class="viz-svg" viewBox="0 0 800 440" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <linearGradient id="exp-grad-top" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0"   stop-color="#6E5BF1"/>
+                  <stop offset="0.6" stop-color="#5C8BFF"/>
+                  <stop offset="1"   stop-color="#4DDFC2"/>
+                </linearGradient>
+              </defs>
+
+              <g transform="translate(400 220)">
+                <!-- vertical assembly axis -->
+                <line class="expl-axis" x1="0" y1="-200" x2="0" y2="200"/>
+
+                <!-- 4 parts stacked, each an iso block, separated vertically -->
+                <!-- ─ PART 1 (top): cap / fastener M6 -->
+                <g transform="translate(0 -170)">
+                  <ellipse class="expl-shadow" cx="0" cy="32" rx="48" ry="9"/>
+                  <!-- hex cap -->
+                  <polygon class="face-dark" points="-52,0 -26,15 -26,-15 -52,0"/>
+                  <polygon class="face"      points="52,0 26,15 26,-15 52,0"/>
+                  <polygon class="face-top" fill="url(#exp-grad-top)"
+                    points="0,-30 52,0 0,15 -52,0"/>
+                  <!-- shaft -->
+                  <polygon class="face-dark" points="-13,18 0,25 0,8 -13,11"/>
+                  <polygon class="face"      points="13,18 0,25 0,8 13,11"/>
+                </g>
+                <g transform="translate(0 -170)" class="dim">
+                  <line class="callout-line" x1="55" y1="0" x2="180" y2="0"/>
+                  <circle r="9" cx="55" cy="0" class="expl-num-bg"/>
+                  <text class="expl-num" x="55" y="3" text-anchor="middle">1</text>
+                  <rect class="expl-tag-bg" x="185" y="-22" width="135" height="44" rx="6"/>
+                  <text class="expl-tag-t" x="195" y="-2">Vijak M6 · DIN 933</text>
+                  <text class="expl-tag-s" x="195" y="14">A2-70 · 25 mm</text>
+                </g>
+
+                <!-- ─ PART 2: top plate -->
+                <g transform="translate(0 -80)">
+                  <ellipse class="expl-shadow" cx="0" cy="32" rx="86" ry="14"/>
+                  <polygon class="face-dark" points="-138,0 0,40 0,18 -138,-22"/>
+                  <polygon class="face"      points="138,0 0,40 0,18 138,-22"/>
+                  <polygon class="face-top" fill="url(#exp-grad-top)" opacity="0.85"
+                    points="0,-22 138,-22 0,-44 -138,-22"/>
+                  <!-- bolt hole -->
+                  <polygon fill="var(--pw-bg-2)" stroke="rgba(255,255,255,0.12)" stroke-width="1"
+                    points="0,-26 12,-28 0,-30 -12,-28"/>
+                </g>
+                <g transform="translate(0 -80)" class="dim">
+                  <line class="callout-line" x1="142" y1="-6" x2="180" y2="-6"/>
+                  <circle r="9" cx="142" cy="-6" class="expl-num-bg"/>
+                  <text class="expl-num" x="142" y="-3" text-anchor="middle">2</text>
+                  <rect class="expl-tag-bg" x="185" y="-28" width="135" height="44" rx="6"/>
+                  <text class="expl-tag-t" x="195" y="-8">Gornja ploča</text>
+                  <text class="expl-tag-s" x="195" y="8">PETG-CF · 4 mm</text>
+                </g>
+
+                <!-- ─ PART 3: body (largest) -->
+                <g transform="translate(0 30)">
+                  <ellipse class="expl-shadow" cx="0" cy="64" rx="120" ry="18"/>
+                  <polygon class="face-dark" points="-190,0 0,55 0,-25 -190,-80"/>
+                  <polygon class="face"      points="190,0 0,55 0,-25 190,-80"/>
+                  <polygon class="face-top" fill="url(#exp-grad-top)" opacity="0.7"
+                    points="0,-25 190,-80 0,-135 -190,-80"/>
+                  <!-- inner cavity -->
+                  <polygon fill="var(--pw-bg-2)" stroke="rgba(255,255,255,0.12)" stroke-width="1"
+                    points="0,-50 95,-80 0,-110 -95,-80"/>
+                </g>
+                <g transform="translate(0 30)" class="dim">
+                  <line class="callout-line" x1="195" y1="-40" x2="225" y2="-40"/>
+                  <circle r="9" cx="195" cy="-40" class="expl-num-bg"/>
+                  <text class="expl-num" x="195" y="-37" text-anchor="middle">3</text>
+                  <rect class="expl-tag-bg" x="230" y="-62" width="135" height="44" rx="6"/>
+                  <text class="expl-tag-t" x="240" y="-42">Telo držača</text>
+                  <text class="expl-tag-s" x="240" y="-26">PETG-CF · 12 mm zid</text>
+                </g>
+
+                <!-- ─ PART 4: base mount -->
+                <g transform="translate(0 165)">
+                  <ellipse class="expl-shadow" cx="0" cy="30" rx="86" ry="13"/>
+                  <polygon class="face-dark" points="-138,0 0,40 0,28 -138,-12"/>
+                  <polygon class="face"      points="138,0 0,40 0,28 138,-12"/>
+                  <polygon class="face-top" fill="var(--pw-surface-3)"
+                    points="0,-12 138,-12 0,-24 -138,-12"/>
+                </g>
+                <g transform="translate(0 165)" class="dim">
+                  <line class="callout-line" x1="142" y1="0" x2="200" y2="0"/>
+                  <circle r="9" cx="142" cy="0" class="expl-num-bg"/>
+                  <text class="expl-num" x="142" y="3" text-anchor="middle">4</text>
+                  <rect class="expl-tag-bg" x="205" y="-22" width="135" height="44" rx="6"/>
+                  <text class="expl-tag-t" x="215" y="-2">Montažna stopa</text>
+                  <text class="expl-tag-s" x="215" y="14">aluminijum · CNC</text>
+                </g>
+              </g>
+
+              <!-- title block bottom-left -->
+              <g transform="translate(40 410)" class="dim">
+                <text fill="var(--pw-fg-3)" font-size="11">eksplodovani prikaz · skala 1:2</text>
+              </g>
+
+              <!-- coord gizmo top-right -->
+              <g transform="translate(740 50)" class="dim">
+                <line stroke="#F87171" stroke-width="1.5" x1="0" y1="0" x2="22" y2="-13"/>
+                <line stroke="#4ADE8A" stroke-width="1.5" x1="0" y1="0" x2="-22" y2="-13"/>
+                <line stroke="#5C8BFF" stroke-width="1.5" x1="0" y1="0" x2="0" y2="-24"/>
+                <text x="25" y="-13" fill="#F87171">X</text>
+                <text x="-32" y="-13" fill="#4ADE8A">Y</text>
+                <text x="-3" y="-28" fill="#5C8BFF">Z</text>
+              </g>
+            </svg>
+
+            <div class="hud hud-tl">
+              <div class="hud-card">
+                <div class="k">Sklop</div>
+                <div class="v" style="font-family:var(--pw-font-sans);font-weight:600">Industrijski držač v3</div>
+                <div class="row"><span class="k">Komponenti</span><span class="v">4</span></div>
+              </div>
+            </div>
+            <div class="hud hud-tr">
+              <span class="hud-row">CAD · revizija R3</span>
+            </div>
+            <div class="hud hud-bl" style="left: auto; right: 18px; bottom: 16px;">
+              <div class="hud-card">
+                <div class="row"><span class="k">Format</span><span class="v">STEP · AP242</span></div>
+                <div class="row"><span class="k">Tolerancije</span><span class="v">ISO 2768-m</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───── PANE 3: TOOLPATH (top-down G-code) ───── -->
+          <div class="viz-pane" data-pane="toolpath">
+            <svg class="viz-svg" viewBox="0 0 800 440" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <pattern id="bed-grid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 20 0 L 0 0 0 20" fill="none"
+                        stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>
+                </pattern>
+              </defs>
+
+              <!-- build plate -->
+              <rect x="160" y="40" width="480" height="360" rx="2"
+                    fill="#0b0c0e" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+              <rect x="160" y="40" width="480" height="360" fill="url(#bed-grid)"/>
+
+              <!-- plate corner ticks -->
+              <g stroke="var(--pw-fg-4)" stroke-width="1">
+                <path d="M168 40 L168 56 M160 48 L176 48"/>
+                <path d="M632 40 L632 56 M624 48 L640 48"/>
+                <path d="M168 400 L168 384 M160 392 L176 392"/>
+                <path d="M632 400 L632 384 M624 392 L640 392"/>
+              </g>
+              <text class="dim" x="160" y="30">0,0</text>
+              <text class="dim" x="600" y="30">256,0 mm</text>
+              <text class="dim" x="158" y="416">x</text>
+              <text class="dim" x="640" y="416">256,256 mm</text>
+
+              <!-- skirt around build area -->
+              <rect class="tp-skirt" x="200" y="80" width="400" height="280"/>
+
+              <!-- ── Part 1: industrial holder ── -->
+              <g transform="translate(280 200)">
+                <rect class="tp-outer" x="-60" y="-50" width="120" height="100" rx="3"/>
+                <rect class="tp-wall"  x="-54" y="-44" width="108" height="88"  rx="2"/>
+                <rect class="tp-wall"  x="-48" y="-38" width="96"  height="76"  rx="2"/>
+                <!-- infill hatching -->
+                <g class="tp-fill">
+                  <path d="M-44 -34 L 44 34"/><path d="M-30 -34 L 44 20"/>
+                  <path d="M-16 -34 L 44 6"/> <path d="M-2 -34 L 44 -8"/>
+                  <path d="M14 -34 L 44 -22"/>
+                  <path d="M-44 -20 L 30 34"/><path d="M-44 -6 L 16 34"/>
+                  <path d="M-44 8  L 2 34"/><path d="M-44 22 L -12 34"/>
+                  <path d="M44 -34 L -44 34"/><path d="M30 -34 L -44 20"/>
+                  <path d="M16 -34 L -44 6"/><path d="M2 -34 L -44 -8"/>
+                  <path d="M-12 -34 L -44 -22"/>
+                  <path d="M44 -20 L -30 34"/><path d="M44 -6 L -16 34"/>
+                  <path d="M44 8 L -2 34"/><path d="M44 22 L 12 34"/>
+                </g>
+                <!-- bolt hole -->
+                <circle class="tp-outer" r="10" cx="0" cy="0"/>
+                <text class="dim" x="-58" y="-58">P1 · držač · 78%</text>
+              </g>
+
+              <!-- ── Part 2: cap (smaller) ── -->
+              <g transform="translate(490 140)">
+                <circle class="tp-outer" r="40"/>
+                <circle class="tp-wall"  r="34"/>
+                <circle class="tp-wall"  r="28"/>
+                <g class="tp-fill">
+                  <line x1="-26" y1="-14" x2="26" y2="-14"/>
+                  <line x1="-26" y1="-6"  x2="26" y2="-6"/>
+                  <line x1="-26" y1="2"   x2="26" y2="2"/>
+                  <line x1="-26" y1="10"  x2="26" y2="10"/>
+                  <line x1="-26" y1="18"  x2="26" y2="18"/>
+                  <line x1="-26" y1="-22" x2="26" y2="-22"/>
+                </g>
+                <circle class="tp-outer" r="6"/>
+                <text class="dim" x="-30" y="-46">P2 · kapa · u redu</text>
+              </g>
+
+              <!-- ── Part 3: bracket (rect) ── -->
+              <g transform="translate(510 310)">
+                <rect class="tp-outer" x="-58" y="-32" width="116" height="64" rx="2"/>
+                <rect class="tp-wall"  x="-52" y="-26" width="104" height="52" rx="1"/>
+                <g class="tp-fill">
+                  <line x1="-46" y1="-20" x2="46" y2="-20"/>
+                  <line x1="-46" y1="-12" x2="46" y2="-12"/>
+                  <line x1="-46" y1="-4"  x2="46" y2="-4"/>
+                  <line x1="-46" y1="4"   x2="46" y2="4"/>
+                  <line x1="-46" y1="12"  x2="46" y2="12"/>
+                  <line x1="-46" y1="20"  x2="46" y2="20"/>
+                </g>
+                <circle class="tp-outer" r="4" cx="-40" cy="0"/>
+                <circle class="tp-outer" r="4" cx="40" cy="0"/>
+                <text class="dim" x="-58" y="-40">P3 · stopa · u redu</text>
+              </g>
+
+              <!-- travel moves between parts -->
+              <g stroke="var(--pw-fg-5)" stroke-width="0.5" stroke-dasharray="2 3" fill="none">
+                <path d="M340 200 Q 420 160 450 140"/>
+                <path d="M530 140 Q 540 220 510 280"/>
+              </g>
+
+              <!-- moving print head -->
+              <g transform="translate(280 200)" class="tp-head">
+                <circle r="12"/>
+                <circle r="3" fill="#4DDFC2"/>
+                <line x1="-18" y1="0" x2="-12" y2="0" stroke="#4DDFC2" stroke-width="1"/>
+                <line x1="12" y1="0" x2="18" y2="0" stroke="#4DDFC2" stroke-width="1"/>
+                <line x1="0" y1="-18" x2="0" y2="-12" stroke="#4DDFC2" stroke-width="1"/>
+                <line x1="0" y1="12" x2="0" y2="18" stroke="#4DDFC2" stroke-width="1"/>
+              </g>
+            </svg>
+
+            <div class="hud hud-tl">
+              <div class="hud-card">
+                <div class="k">Build plate</div>
+                <div class="v" style="font-family:var(--pw-font-sans);font-weight:600">MK4-02 · 256 × 256 mm</div>
+                <div class="row"><span class="k">Delovi</span><span class="v">3 · nesting</span></div>
+              </div>
+            </div>
+            <div class="hud hud-tr">
+              <span class="hud-row">
+                <span class="live-dot"></span>G-code · 64,212 redova
+              </span>
+            </div>
+            <div class="hud hud-br">
+              <div class="hud-card">
+                <div class="row"><span class="k">Brzina</span><span class="v">180<span class="u">mm/s</span></span></div>
+                <div class="row"><span class="k">Visina sloja</span><span class="v">0.20<span class="u">mm</span></span></div>
+                <div class="row"><span class="k">Mlaznica</span><span class="v">0.4<span class="u">mm</span></span></div>
+              </div>
+            </div>
+            <!-- legend bottom-left -->
+            <div class="hud hud-bl">
+              <div class="hud-card" style="flex-direction:row;gap:14px;min-width:0">
+                <span style="display:inline-flex;align-items:center;gap:6px"><span style="width:10px;height:2px;background:#4DDFC2"></span>spoljni zid</span>
+                <span style="display:inline-flex;align-items:center;gap:6px"><span style="width:10px;height:2px;background:#5C8BFF"></span>zid</span>
+                <span style="display:inline-flex;align-items:center;gap:6px"><span style="width:10px;height:2px;background:#6E5BF1"></span>ispuna</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== LOGOS -->
+  <section class="logos">
+    <div class="wrap">
+      <div class="logos-label">Sa poverenjem koriste timovi iz Srbije i regiona</div>
+      <div class="logos-row">
+        <span>Tehnomont</span>
+        <span>Iskra · NS</span>
+        <span>Helio Labs</span>
+        <span>Sigma Auto</span>
+        <span>Vinča R&amp;D</span>
+        <span>Pannonia</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== SERVICES -->
+  <section class="section" id="usluge">
+    <div class="wrap">
+      <span class="section-eyebrow">Usluge</span>
+      <h2 class="section-title">Modularne usluge za razvoj proizvoda.</h2>
+      <p class="section-sub">
+        Sajt je zamišljen kao sistem — svaka usluga ima posebnu stranicu, galeriju, cenovnik i formu za upit. Možete uzeti jednu ili kombinovati ih kao jedan tok od skice do isporuke.
+      </p>
+
+      <div class="services">
+        <!-- 01 -->
+        <div class="feat">
+          <div class="feat-icon">
+            <svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 7l9-4 9 4v10l-9 4-9-4z"/>
+              <path d="M3 7l9 4 9-4"/>
+              <path d="M12 11v10"/>
+            </svg>
+          </div>
+          <h3>3D štampa i prototipovi</h3>
+          <p>Brza izrada funkcionalnih prototipova, alata, držača, kućišta i industrijskih delova. FDM, MSLA i CF-kompoziti, sa proverom tolerancija pre štampe.</p>
+          <div class="tag"><span>01</span><span class="more">
+</span></div>
+        </div>
+
+        <!-- 02 -->
+        <div class="feat">
+          <div class="feat-icon">
+            <svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 16l9 4 9-4"/>
+              <path d="M3 12l9 4 9-4"/>
+              <path d="M3 8l9 4 9-4-9-4-9 4z"/>
+            </svg>
+          </div>
+          <h3>CAD konstrukcija</h3>
+          <p>2D/3D modelovanje, tehnička dokumentacija, priprema za proizvodnju i optimizacija geometrije za štampu, livenje ili CNC obradu.</p>
+          <div class="tag"><span>02</span><span class="more">
+</span></div>
+        </div>
+
+        <!-- 03 -->
+        <div class="feat">
+          <div class="feat-icon">
+            <svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M3 7v10M21 7v10M3 7l9-4 9 4-9 4z"/>
+              <path d="M7 12h.01M12 14h.01M17 12h.01"/>
+            </svg>
+          </div>
+          <h3>3D skeniranje i reverse engineering</h3>
+          <p>Digitalizacija postojećih delova, rekonstrukcija modela bez nacrta i priprema fajlova za dalju obradu, repliciranje ili dotvorbu.</p>
+          <div class="tag"><span>03</span><span class="more">
+</span></div>
+        </div>
+
+        <!-- 04 -->
+        <div class="feat">
+          <div class="feat-icon">
+            <svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="4" y="4" width="16" height="16" rx="2"/>
+              <path d="M9 9h6v6H9z"/>
+              <path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/>
+            </svg>
+          </div>
+          <h3>Automatizacija i elektronika</h3>
+          <p>Razvoj pametnih uređaja, senzorskih sistema, ESP32 / PLC rešenja i mini SCADA prikaza — od ploče do kućišta i firmvera.</p>
+          <div class="tag"><span>04</span><span class="more">
+</span></div>
+        </div>
+
+        <!-- 05 -->
+        <div class="feat">
+          <div class="feat-icon">
+            <svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M14.7 6.3a4 4 0 1 0 3 3l5 5-3 3-5-5a4 4 0 0 0-3-3z"/>
+              <path d="M9 14l-5 5 3 3 5-5"/>
+            </svg>
+          </div>
+          <h3>Razvoj specijalnih alata</h3>
+          <p>Namenski alati, prihvati, šabloni, nosači i rešenja za proizvodnju, servis i kontrolu kvaliteta. Jedan komad, mala serija ili obnova starog dela.</p>
+          <div class="tag"><span>05</span><span class="more">
+</span></div>
+        </div>
+
+        <!-- 06 -->
+        <div class="feat">
+          <div class="feat-icon">
+            <svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 16V4M6 10l6-6 6 6"/>
+              <path d="M4 20h16"/>
+            </svg>
+          </div>
+          <h3>Instant ponuda · upload fajla</h3>
+          <p>Modularna osnova za upload STL / STEP / IGES fajlova i automatsku kalkulaciju cene po materijalu, masi, vremenu štampe i broju komada.</p>
+          <div class="tag"><span>06</span><span class="more">
+</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== PROCESS -->
+  <section class="section" id="proces">
+    <div class="wrap">
+      <span class="section-eyebrow">Proces</span>
+      <h2 class="section-title">Jasan tok od prvog fajla do testiranja.</h2>
+      <p class="section-sub">
+        Klijent šalje ideju, skicu, STL/STEP ili postojeći deo. ProtoWave preuzima tehničku analizu, predlog materijala i realizaciju. Bez ping-ponga i nepotrebnih sastanaka.
+      </p>
+
+      <div class="process-grid">
+        <div class="step">
+          <div class="num">01</div>
+          <div class="body">
+            <h3>Analiza zahteva i namene</h3>
+            <p>Definišemo gde deo ide, kakvo opterećenje trpi i koje su tolerancije bitne. Bez ovog koraka, sve ostalo je nagađanje.</p>
+            <div class="deliv">Isporuka: <b>kratak brief + procena</b> · 24h</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="num">02</div>
+          <div class="body">
+            <h3>CAD model / korekcija fajla</h3>
+            <p>2D/3D model od nule ili dorada postojećeg STL / STEP fajla. Parametarski rad — promene se nasleđuju kroz čitavu seriju.</p>
+            <div class="deliv">Isporuka: <b>STEP + nacrt + render</b> · 1–3 dana</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="num">03</div>
+          <div class="body">
+            <h3>Izbor materijala i tehnologije</h3>
+            <p>PLA, PETG, TPU, ABS, PC-ABS, CF kompoziti ili Resin — biramo prema temperaturi, opterećenju i tolerancijama dela.</p>
+            <div class="deliv">Isporuka: <b>specifikacija + cenovnik</b> · isti dan</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="num">04</div>
+          <div class="body">
+            <h3>Prototip, testiranje, isporuka</h3>
+            <p>Štampa, ručna kontrola tolerancija, eventualna doštampa nakon testa i pakovanje za isporuku ili lično preuzimanje.</p>
+            <div class="deliv">Isporuka: <b>deo + dokumentacija</b> · 1–5 dana</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== MATERIALS -->
+  <section class="section" id="materijali">
+    <div class="wrap">
+      <span class="section-eyebrow">Materijali i primena</span>
+      <h2 class="section-title">Materijal je deo dizajna, ne fusnota.</h2>
+      <p class="section-sub">
+        Najveći deo grešaka u prototipiranju je pogrešan materijal za pravu geometriju. Biramo zajedno — po temperaturi, opterećenju, površini i ceni.
+      </p>
+
+      <div class="materials-wrap">
+        <div class="mat-side">
+          <div class="label">Tipična primena</div>
+          <h3>Od jednokomadnog držača do male serije od 200 delova.</h3>
+          <p>
+            Startup timovi, proizvodnja, servis, arhitekte, dizajneri i firme kojima treba brza tehnička podrška bez komplikovanja. Radimo jedan deo, iteraciju, ili kratku seriju — uz potpunu kontrolu kvaliteta.
+          </p>
+          <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--pw-border);font-size:12px;font-family:var(--pw-font-mono);color:var(--pw-fg-3);line-height:1.7">
+            mašinski delovi · servisni rezervni delovi<br/>
+            arhitektonski makete · vakuum-formed alati<br/>
+            kućišta elektronike · industrijski držači
+          </div>
+        </div>
+
+        <div class="mat-grid">
+          <div class="mat">
+            <span class="id">M-01</span>
+            <div><div class="name">PLA</div><div class="spec" style="font-size: 12px">220 °C · krto · prototip</div></div>
+            <span class="dot" style="width:8px;height:8px;border-radius:99px;background:#4ADE8A"></span>
+          </div>
+          <div class="mat">
+            <span class="id">M-02</span>
+            <div><div class="name">PETG</div><div class="spec" style="font-size: 12px">240 °C · žilavo · default</div></div>
+            <span class="dot" style="width:8px;height:8px;border-radius:99px;background:#4DDFC2"></span>
+          </div>
+          <div class="mat">
+            <span class="id">M-03</span>
+            <div><div class="name">TPU 85A</div><div class="spec" style="font-size: 12px">225 °C · elastično</div></div>
+            <span class="dot" style="width:8px;height:8px;border-radius:99px;background:#5C8BFF"></span>
+          </div>
+          <div class="mat">
+            <span class="id">M-04</span>
+            <div><div class="name">ABS</div><div class="spec" style="font-size: 12px">250 °C · temperatura</div></div>
+            <span class="dot" style="width:8px;height:8px;border-radius:99px;background:#F4C257"></span>
+          </div>
+          <div class="mat">
+            <span class="id">M-05</span>
+            <div><div class="name">PC-ABS</div><div class="spec" style="font-size: 12px">270 °C · inženjerski</div></div>
+            <span class="dot" style="width:8px;height:8px;border-radius:99px;background:#F4C257"></span>
+          </div>
+          <div class="mat">
+            <span class="id">M-06</span>
+            <div><div class="name">CF kompoziti</div><div class="spec" style="font-size: 12px">PETG-CF · PA-CF</div></div>
+            <span class="dot" style="width:8px;height:8px;border-radius:99px;background:#8E7DFF"></span>
+          </div>
+          <div class="mat">
+            <span class="id">M-07</span>
+            <div><div class="name">Resin · MSLA</div><div class="spec" style="font-size: 12px">visoka rezolucija</div></div>
+            <span class="dot" style="width:8px;height:8px;border-radius:99px;background:#6E5BF1"></span>
+          </div>
+          <div class="mat">
+            <span class="id">M-08</span>
+            <div><div class="name">Engineering-grade</div><div class="spec" style="font-size: 12px">na zahtev · po fajlu</div></div>
+            <span class="dot" style="width:8px;height:8px;border-radius:99px;background:#80848e"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== CONTACT -->
+  <section class="contact" id="kontakt">
+    <div class="wrap contact-inner">
+      <div>
+        <span class="section-eyebrow">Start projekta</span>
+        <h2>Pošalji ideju, fajl ili problem koji treba rešiti.</h2>
+        <p>
+          Idealno za startup timove, proizvodnju, servis, arhitekte, dizajnere i firme kojima treba brza tehnička podrška bez komplikovanja. Odgovaramo u roku od 24 sata, sa kratkom procenom i sledećim korakom.
+        </p>
+        <div style="margin-top:32px;display:flex;gap:10px;flex-wrap:wrap">
+          <a class="btn btn-primary btn-lg" href="Kontakt.html">Kontaktiraj nas</a>
+          <a class="btn btn-secondary btn-lg" href="Kontakt.html#calc">Kalkulator ponude</a>
+        </div>
+      </div>
+
+      <div class="contact-card">
+        <div class="row">
+          <span class="k">Lokacija</span>
+          <span class="v">Novi Sad · Srbija</span>
+        </div>
+        <div class="row">
+          <span class="k">Email</span>
+          <span class="v">kontakt@protowave.studio</span>
+        </div>
+        <div class="row">
+          <span class="k">Telefon</span>
+          <span class="v">+381 64 0715 696</span>
+        </div>
+        <div class="row">
+          <span class="k">Fajlovi</span>
+          <span class="v">STL · STEP · IGES · DWG · PDF</span>
+        </div>
+        <div class="row">
+          <span class="k">NDA</span>
+          <span class="v">spreman · potpis pre prvog fajla</span>
+        </div>
+        <div class="next">sledeći modul · upload fajla + kalkulator ponude</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== FOOTER -->
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <svg width="22" height="22" viewBox="0 0 36 36" fill="none">
+              <defs>
+                <linearGradient id="lg-ft" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#6E5BF1"/>
+                  <stop offset="0.55" stop-color="#5C8BFF"/>
+                  <stop offset="1" stop-color="#4DDFC2"/>
+                </linearGradient>
+              </defs>
+              <rect x="2"  y="22" width="32" height="3" rx="1.5" fill="url(#lg-ft)" opacity="0.55"/>
+              <rect x="4"  y="16" width="28" height="3" rx="1.5" fill="url(#lg-ft)" opacity="0.75"/>
+              <rect x="7"  y="10" width="22" height="3" rx="1.5" fill="url(#lg-ft)" opacity="0.9"/>
+              <rect x="11" y="4"  width="14" height="3" rx="1.5" fill="url(#lg-ft)"/>
+            </svg>
+            <span style="font-size:15px;font-weight:600;color:var(--pw-fg)">ProtoWave</span>
+          </div>
+          <p style="margin:0;color:var(--pw-fg-3);max-width:280px;line-height:1.6;font-size:13px">
+            Inženjerski studio za 3D štampu i prototipiranje. Novi Sad · Srbija.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Usluge</h4>
+          <a href="#usluge">3D štampa</a>
+          <a href="#usluge">CAD konstrukcija</a>
+          <a href="#usluge">Skeniranje</a>
+          <a href="#usluge">Automatizacija</a>
+        </div>
+        <div class="footer-col">
+          <h4>Studio</h4>
+          <a href="#">O nama</a>
+          <a href="#">Klijenti</a>
+          <a href="#">Portfolio</a>
+          <a href="#">Karijera</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resursi</h4>
+          <a href="#materijali">Materijali</a>
+          <a href="Kontakt.html#calc">Kalkulator ponude</a>
+          <a href="Kontakt.html#faq">FAQ</a>
+          <a href="#">Tehnički vodič</a>
+        </div>
+        <div class="footer-col">
+          <h4>Pravno</h4>
+          <a href="#">Uslovi</a>
+          <a href="#">Privatnost</a>
+          <a href="#">NDA · obrazac</a>
+        </div>
+      </div>
+      <div class="footer-bot">
+        <span>© 2026 ProtoWave · Novi Sad · Srbija</span>
+        <span>
+</span>
+      </div>
+    </div>
+  </footer>
+
+  <div id="tweaks-root"></div>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel">
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "heroVisual": "layer-build",
+      "duration": 60,
+      "paused": false,
+      "annotations": true,
+      "accent": "wave"
+    }/*EDITMODE-END*/;
+
+    function applyStatic(t) {
+      const root = document.getElementById('hero-3d');
+      if (!root) return;
+      root.dataset.variant  = t.heroVisual;
+      root.dataset.annotate = t.annotations ? '1' : '0';
+      applyAccent(t);
+    }
+
+    function applyAccent(t) {
+      const top = document.querySelector('#wave-top');
+      if (!top) return;
+      const stops = top.querySelectorAll('stop');
+      const palettes = {
+        wave:   ['#6E5BF1', '#5C8BFF', '#4DDFC2'],
+        violet: ['#5945D6', '#6E5BF1', '#8E7DFF'],
+        mint:   ['#1F8A5B', '#4DDFC2', '#6EF0D6'],
+        amber:  ['#9C6E14', '#F4C257', '#FFDD8A']
+      };
+      const p = palettes[t.accent] || palettes.wave;
+      stops[0].setAttribute('stop-color', p[0]);
+      stops[1].setAttribute('stop-color', p[1]);
+      stops[2].setAttribute('stop-color', p[2]);
+    }
+
+    function applyProgress(rawPct) {
+      const pct = Math.max(0, Math.min(100, rawPct));
+      const bar  = document.getElementById('hud-prog-bar');
+      const pctL = document.getElementById('hud-pct');
+      const lay  = document.getElementById('hud-layer');
+      if (bar)  bar.style.width = pct + '%';
+      if (pctL) pctL.firstChild.nodeValue = Math.round(pct) + '%';
+      if (lay) {
+        const n = Math.round(pct / 100 * 612);
+        lay.firstChild.nodeValue = n;
+      }
+
+      // Drive layer-build geometry: part grows with progress.
+      // L = 90 (plan), H = 160 (full height), Linner = 45 (cavity).
+      const p = pct / 100;
+      const H = 160;
+      const bh = p * H;                              // current build height
+      const set = (id, attr, val) => { const el = document.getElementById(id); if (el) el.setAttribute(attr, val); };
+
+      // Side faces: bottom edge fixed; top edge climbs with bh.
+      set('face-right', 'points',
+        `155.9,0 0,90 0,${90 - bh} 155.9,${-bh}`);
+      set('face-left',  'points',
+        `-155.9,0 0,90 0,${90 - bh} -155.9,${-bh}`);
+
+      // Top face = active layer at z = bh.
+      set('face-top',    'points',
+        `0,${90 - bh} 155.9,${-bh} 0,${-90 - bh} -155.9,${-bh}`);
+      set('face-cavity', 'points',
+        `0,${45 - bh} 77.9,${-bh} 0,${-45 - bh} -77.9,${-bh}`);
+      set('bead-top',    'points',
+        `0,${90 - bh} 155.9,${-bh} 0,${-90 - bh} -155.9,${-bh}`);
+
+      // Nozzle: hover 35 units above active top face center.
+      set('nozzle-pos', 'transform', `translate(0 ${-bh - 35})`);
+
+      // Layer lines: hide those above current build height (z = 8*k for k=1..19).
+      const lines = document.querySelectorAll('#layer-lines line');
+      lines.forEach((ln, i) => {
+        const k = (i % 19) + 1;
+        ln.style.display = (k * 8) <= bh ? '' : 'none';
+      });
+
+      // Glow-pulse only when actively printing.
+      const glow = document.getElementById('glow-top');
+      if (glow) glow.style.animationPlayState = (pct > 0 && pct < 100) ? 'running' : 'paused';
+    }
+
+    // TweakColor expects either a hex string or an array of hex strings as
+    // each option — wrap the named palettes so the swatch UI renders them.
+    function AccentPicker({ value, onChange }) {
+      const palettes = [
+        { id: 'wave',   colors: ['#6E5BF1','#5C8BFF','#4DDFC2'] },
+        { id: 'violet', colors: ['#5945D6','#6E5BF1','#8E7DFF'] },
+        { id: 'mint',   colors: ['#1F8A5B','#4DDFC2','#6EF0D6'] },
+        { id: 'amber',  colors: ['#9C6E14','#F4C257','#FFDD8A'] }
+      ];
+      const cur = palettes.find(p => p.id === value)?.colors || palettes[0].colors;
+      return (
+        <TweakColor
+          label="Paleta"
+          value={cur}
+          options={palettes.map(p => p.colors)}
+          onChange={(arr) => {
+            const m = palettes.find(p => p.colors.join() === arr.join());
+            onChange(m ? m.id : 'wave');
+          }}
+        />
+      );
+    }
+
+    function App() {
+      const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+      React.useEffect(() => { applyStatic(t); }, [t.heroVisual, t.annotations, t.accent]);
+      React.useEffect(() => {
+        let raf, start = null, pausedAt = null;
+        const dur = Math.max(1, t.duration) * 1000;
+        const tick = (ts) => {
+          if (start === null) start = ts;
+          if (t.paused) {
+            if (pausedAt === null) pausedAt = ts;
+            applyProgress(((pausedAt - start) % dur) / dur * 100);
+            raf = requestAnimationFrame(tick);
+            return;
+          }
+          if (pausedAt !== null) { start += (ts - pausedAt); pausedAt = null; }
+          applyProgress(((ts - start) % dur) / dur * 100);
+          raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+        return () => cancelAnimationFrame(raf);
+      }, [t.duration, t.paused]);
+      return (
+        <TweaksPanel title="Tweaks · hero">
+          <TweakSection label="3D vizual" />
+          <TweakSelect
+            label="Prikaz"
+            value={t.heroVisual}
+            options={[
+              { value: 'layer-build', label: 'Slojevita štampa' },
+              { value: 'exploded',    label: 'Eksplodovani prikaz' }
+            ]}
+            onChange={(v) => setTweak('heroVisual', v)}
+          />
+          <TweakSlider
+            label="Trajanje ciklusa"
+            value={t.duration}
+            min={3} max={30} step={1} unit="s"
+            onChange={(v) => setTweak('duration', v)}
+          />
+          <TweakToggle
+            label="Pauziraj animaciju"
+            value={t.paused}
+            onChange={(v) => setTweak('paused', v)}
+          />
+          <TweakToggle
+            label="Anotacije"
+            value={t.annotations}
+            onChange={(v) => setTweak('annotations', v)}
+          />
+          <TweakSection label="Akcenat (top sloj)" />
+          <AccentPicker value={t.accent} onChange={(v) => setTweak('accent', v)} />
+        </TweaksPanel>
+      );
+    }
+
+    // Apply defaults on first paint (before React mounts).
+    applyStatic(TWEAK_DEFAULTS);
+    applyProgress(0);
+
+    ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<App />);
+  </script>
+</body>
+</html>

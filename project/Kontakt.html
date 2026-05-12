@@ -1,0 +1,1411 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8"/>
+  <title>ProtoWave — Kontakt · pokreni projekat</title>
+  <meta name="viewport" content="width=1280"/>
+  <link rel="icon" href="logo-mark.svg"/>
+  <link rel="stylesheet" href="colors_and_type.css"/>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      background: var(--pw-bg);
+      color: var(--pw-fg);
+      font-family: var(--pw-font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+    input, textarea, select { font-family: inherit; color: inherit; }
+
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+
+    /* ------------------------------------------------------------------ NAV */
+    .nav {
+      position: sticky; top: 0; z-index: 30;
+      background: rgba(8,9,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--pw-border);
+    }
+    .nav-inner { display: flex; align-items: center; height: 64px; gap: 32px; }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
+    }
+    .nav-brand .sub {
+      font-family: var(--pw-font-mono); font-size: 10px;
+      color: var(--pw-fg-4); margin-left: 4px;
+      padding-left: 10px; border-left: 1px solid var(--pw-border-2);
+      line-height: 1; letter-spacing: 0.04em;
+    }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { font-size: 14px; color: var(--pw-fg-2);
+                   transition: color var(--pw-dur-base) var(--pw-ease); }
+    .nav-links a:hover { color: var(--pw-fg); }
+    .nav-links a.active { color: var(--pw-fg); }
+    .nav-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+    /* ------------------------------------------------------------------ BTN */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      height: 36px; padding: 0 14px;
+      border-radius: var(--pw-r-2);
+      font-size: 14px; font-weight: 500; line-height: 1;
+      border: 1px solid transparent;
+      transition: background var(--pw-dur-base) var(--pw-ease),
+                  border-color var(--pw-dur-base) var(--pw-ease);
+    }
+    .btn-primary {
+      background: var(--pw-brand); color: #fff;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.18) inset;
+    }
+    .btn-primary:hover { background: var(--pw-brand-2); }
+    .btn-secondary {
+      background: var(--pw-surface-2);
+      border-color: var(--pw-border-2);
+      color: var(--pw-fg);
+    }
+    .btn-secondary:hover { background: var(--pw-surface-3); border-color: var(--pw-border-3); }
+    .btn-ghost { color: var(--pw-fg-2); }
+    .btn-ghost:hover { color: var(--pw-fg); }
+    .btn-lg { height: 44px; padding: 0 20px; font-size: 15px; }
+    .btn-block { width: 100%; justify-content: center; }
+
+    /* ------------------------------------------------------------------ SECTION */
+    .section { padding: 96px 0; border-bottom: 1px solid var(--pw-border); }
+    .section-eyebrow {
+      font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--pw-fg-3); font-weight: 500;
+    }
+    .section-title {
+      font-size: 40px; font-weight: 600; letter-spacing: -0.02em;
+      line-height: 1.1; color: var(--pw-fg); margin: 12px 0 0; max-width: 720px;
+    }
+    .section-sub {
+      font-size: 17px; color: var(--pw-fg-2); margin-top: 14px; max-width: 640px;
+    }
+
+    .ico { width: 16px; height: 16px; }
+    .ico-lg { width: 20px; height: 20px; }
+
+    /* ------------------------------------------------------------------ HERO */
+    .page-hero { padding: 80px 0 56px; position: relative; overflow: hidden; }
+    .page-hero-bg {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(60% 60% at 20% 30%, rgba(110,91,241,0.18), transparent 60%),
+        radial-gradient(45% 50% at 90% 80%, rgba(77,223,194,0.10), transparent 60%);
+    }
+    .page-hero .wrap { position: relative; }
+    .page-hero h1 {
+      font-size: 56px; font-weight: 600; letter-spacing: -0.02em;
+      line-height: 1.04; margin: 16px 0 0; color: var(--pw-fg);
+      max-width: 820px; text-wrap: balance;
+    }
+    .page-hero h1 .grad {
+      background: linear-gradient(120deg,#6E5BF1,#5C8BFF,#4DDFC2);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
+    .page-hero p.lede {
+      font-size: 18px; color: var(--pw-fg-2);
+      margin: 20px 0 0; max-width: 640px; line-height: 1.55;
+    }
+    .hero-meta {
+      display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+      margin-top: 28px; padding-top: 24px;
+      border-top: 1px solid var(--pw-border);
+    }
+    .hero-meta .pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px; border-radius: 999px;
+      background: var(--pw-surface); border: 1px solid var(--pw-border-2);
+      font-size: 12px; color: var(--pw-fg-2);
+      font-family: var(--pw-font-mono);
+    }
+    .hero-meta .pill .d {
+      width: 6px; height: 6px; border-radius: 99px;
+      background: #4DDFC2; box-shadow: 0 0 6px #4DDFC2;
+    }
+
+    /* ------------------------------------------------------------------ MAIN GRID */
+    .contact-main { padding: 64px 0 96px; border-bottom: 1px solid var(--pw-border); }
+    .contact-grid {
+      display: grid; grid-template-columns: 1.4fr 0.9fr;
+      gap: 32px; align-items: start;
+    }
+
+    /* ============ FORM CARD ============ */
+    .form-card {
+      background: var(--pw-surface);
+      border: 1px solid var(--pw-border-2);
+      border-radius: 14px;
+      box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset,
+                  0 12px 40px -8px rgba(0,0,0,0.5);
+      overflow: hidden;
+    }
+    .form-card-bar {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 18px;
+      background: var(--pw-bg-2);
+      border-bottom: 1px solid var(--pw-border);
+    }
+    .form-card-bar .crumb {
+      font-size: 12px; font-family: var(--pw-font-mono);
+      color: var(--pw-fg-3);
+    }
+    .form-card-bar .right {
+      margin-left: auto;
+      font-size: 11px; font-family: var(--pw-font-mono);
+      color: var(--pw-fg-4);
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .form-card-bar .right .d {
+      width: 6px; height: 6px; border-radius: 99px;
+      background: #4DDFC2; box-shadow: 0 0 4px #4DDFC2;
+    }
+
+    .form-body { padding: 32px; display: flex; flex-direction: column; gap: 36px; }
+
+    .fset { display: flex; flex-direction: column; gap: 16px; }
+    .fset-head { display: flex; align-items: baseline; gap: 12px; }
+    .fset-num {
+      font-family: var(--pw-font-mono); font-size: 11px;
+      letter-spacing: 0.08em; color: var(--pw-fg-4);
+    }
+    .fset-title {
+      font-size: 16px; font-weight: 600; color: var(--pw-fg);
+      letter-spacing: -0.01em;
+    }
+    .fset-hint {
+      font-size: 12px; color: var(--pw-fg-4);
+      font-family: var(--pw-font-mono);
+      margin-left: auto;
+    }
+
+    /* chip selector (radio cards) */
+    .chips {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .chip {
+      display: flex; flex-direction: column; gap: 4px;
+      padding: 14px 16px;
+      background: var(--pw-bg-2);
+      border: 1px solid var(--pw-border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color var(--pw-dur-base) var(--pw-ease),
+                  background var(--pw-dur-base) var(--pw-ease);
+    }
+    .chip:hover { border-color: var(--pw-border-2); background: var(--pw-surface-2); }
+    .chip input { position: absolute; opacity: 0; pointer-events: none; }
+    .chip .t {
+      font-size: 13px; font-weight: 500; color: var(--pw-fg);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .chip .t .num {
+      font-family: var(--pw-font-mono); font-size: 10px;
+      color: var(--pw-fg-4); letter-spacing: 0.04em;
+    }
+    .chip .s {
+      font-size: 11px; font-family: var(--pw-font-mono);
+      color: var(--pw-fg-3);
+    }
+    .chip:has(input:checked) {
+      border-color: rgba(110,91,241,0.5);
+      background: rgba(110,91,241,0.06);
+      box-shadow: 0 0 0 1px rgba(110,91,241,0.35);
+    }
+    .chip:has(input:checked) .t { color: var(--pw-fg); }
+    .chip:has(input:checked) .t .num { color: #B5A8FF; }
+
+    /* inputs */
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    .field-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .field-row-3 {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+    }
+    .label {
+      font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--pw-fg-4); font-weight: 500;
+    }
+    .label .req { color: #F87171; margin-left: 2px; }
+    .input, .textarea, .select {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--pw-bg-2);
+      border: 1px solid var(--pw-border);
+      border-radius: 8px;
+      color: var(--pw-fg);
+      font-size: 14px; line-height: 1.4;
+      transition: border-color var(--pw-dur-base) var(--pw-ease),
+                  background var(--pw-dur-base) var(--pw-ease);
+      outline: none;
+    }
+    .input::placeholder, .textarea::placeholder { color: var(--pw-fg-4); }
+    .input:hover, .textarea:hover, .select:hover { border-color: var(--pw-border-2); }
+    .input:focus, .textarea:focus, .select:focus {
+      border-color: rgba(110,91,241,0.5);
+      box-shadow: 0 0 0 1px rgba(110,91,241,0.35);
+      background: var(--pw-surface);
+    }
+    .textarea { resize: vertical; min-height: 120px; font-family: inherit; }
+    .select {
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2380848e' stroke-width='1.8'><path d='M6 9l6 6 6-6'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+    .field-hint {
+      font-size: 11px; font-family: var(--pw-font-mono);
+      color: var(--pw-fg-4);
+      display: flex; justify-content: space-between;
+    }
+
+    /* upload zone */
+    .uploader {
+      padding: 28px;
+      background: var(--pw-bg-2);
+      border: 1.5px dashed var(--pw-border-3);
+      border-radius: 12px;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      text-align: center;
+      transition: border-color var(--pw-dur-base) var(--pw-ease),
+                  background var(--pw-dur-base) var(--pw-ease);
+      cursor: pointer;
+    }
+    .uploader:hover {
+      border-color: rgba(110,91,241,0.5);
+      background: rgba(110,91,241,0.04);
+    }
+    .uploader .icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: var(--pw-surface-2); border: 1px solid var(--pw-border-2);
+      color: var(--pw-accent);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .uploader .t {
+      font-size: 14px; font-weight: 500; color: var(--pw-fg);
+    }
+    .uploader .t b { color: #B5A8FF; font-weight: 500; }
+    .uploader .s {
+      font-size: 11px; font-family: var(--pw-font-mono);
+      color: var(--pw-fg-4); letter-spacing: 0.02em;
+    }
+    .uploader .formats {
+      display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
+      margin-top: 4px;
+    }
+    .uploader .formats span {
+      padding: 3px 8px; font-size: 10px;
+      font-family: var(--pw-font-mono);
+      background: var(--pw-surface);
+      border: 1px solid var(--pw-border);
+      border-radius: 4px;
+      color: var(--pw-fg-3);
+    }
+
+    /* checkbox row */
+    .check-row {
+      display: flex; gap: 12px;
+      padding: 14px 16px;
+      background: var(--pw-bg-2);
+      border: 1px solid var(--pw-border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color var(--pw-dur-base) var(--pw-ease);
+    }
+    .check-row:hover { border-color: var(--pw-border-2); }
+    .check-row input { position: absolute; opacity: 0; pointer-events: none; }
+    .check-row .box {
+      flex: 0 0 18px; width: 18px; height: 18px;
+      border: 1px solid var(--pw-border-3);
+      border-radius: 4px;
+      background: var(--pw-surface);
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 1px;
+      transition: background var(--pw-dur-base) var(--pw-ease),
+                  border-color var(--pw-dur-base) var(--pw-ease);
+    }
+    .check-row .box svg { width: 12px; height: 12px; color: #fff; opacity: 0; }
+    .check-row:has(input:checked) .box {
+      background: var(--pw-brand);
+      border-color: var(--pw-brand);
+    }
+    .check-row:has(input:checked) .box svg { opacity: 1; }
+    .check-row .body { flex: 1; }
+    .check-row .body .t { font-size: 13px; font-weight: 500; color: var(--pw-fg); }
+    .check-row .body .s {
+      font-size: 12px; color: var(--pw-fg-3); margin-top: 2px;
+      font-family: var(--pw-font-mono);
+    }
+
+    /* submit row */
+    .submit-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 24px; border-top: 1px solid var(--pw-border);
+      gap: 16px;
+    }
+    .submit-row .meta {
+      font-size: 12px; font-family: var(--pw-font-mono);
+      color: var(--pw-fg-4);
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .submit-row .meta b { color: var(--pw-fg-2); font-weight: 500; }
+
+    /* ============ SIDEBAR ============ */
+    .side { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 88px; }
+    .side-card {
+      padding: 24px;
+      background: var(--pw-surface);
+      border: 1px solid var(--pw-border);
+      border-radius: 12px;
+    }
+    .side-card.gradient {
+      background:
+        radial-gradient(80% 80% at 100% 0%, rgba(110,91,241,0.10), transparent 70%),
+        var(--pw-surface);
+      border-color: var(--pw-border-2);
+    }
+    .side-card .head {
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--pw-fg-4); font-weight: 500; margin-bottom: 16px;
+    }
+    .side-row {
+      display: grid; grid-template-columns: 88px 1fr;
+      gap: 12px; padding: 10px 0;
+      border-top: 1px solid var(--pw-border);
+      align-items: center;
+    }
+    .side-row:first-of-type { border-top: 0; padding-top: 0; }
+    .side-row .k {
+      font-size: 11px; color: var(--pw-fg-4);
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .side-row .v {
+      font-size: 13px; color: var(--pw-fg);
+      font-family: var(--pw-font-mono);
+    }
+    .side-row .v a:hover { color: var(--pw-accent); }
+
+    /* step preview */
+    .next-list { display: flex; flex-direction: column; gap: 4px; }
+    .next-item {
+      display: grid; grid-template-columns: 28px 1fr auto;
+      gap: 12px; align-items: center;
+      padding: 12px 0;
+      border-top: 1px solid var(--pw-border);
+    }
+    .next-item:first-of-type { border-top: 0; padding-top: 0; }
+    .next-item .num {
+      width: 24px; height: 24px; border-radius: 6px;
+      background: var(--pw-bg-2);
+      border: 1px solid var(--pw-border-2);
+      font-family: var(--pw-font-mono); font-size: 11px;
+      color: var(--pw-fg-2);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .next-item .body .t {
+      font-size: 13px; font-weight: 500; color: var(--pw-fg);
+    }
+    .next-item .body .s {
+      font-size: 11px; color: var(--pw-fg-3);
+      font-family: var(--pw-font-mono); margin-top: 2px;
+    }
+    .next-item .eta {
+      font-size: 10px; font-family: var(--pw-font-mono);
+      letter-spacing: 0.04em;
+      color: var(--pw-fg-4);
+      padding: 3px 8px; border-radius: 4px;
+      background: var(--pw-bg-2);
+      border: 1px solid var(--pw-border);
+    }
+
+    /* nda pill */
+    .nda-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px; border-radius: 999px;
+      background: rgba(77,223,194,0.08);
+      border: 1px solid rgba(77,223,194,0.32);
+      color: #4DDFC2;
+      font-size: 11px; font-family: var(--pw-font-mono);
+    }
+    .nda-pill .d {
+      width: 5px; height: 5px; border-radius: 99px;
+      background: #4DDFC2; box-shadow: 0 0 4px #4DDFC2;
+    }
+
+    /* ============ QUOTE CALCULATOR SECTION ============ */
+    .calc-grid {
+      display: grid; grid-template-columns: 1.1fr 0.9fr;
+      gap: 32px; margin-top: 56px; align-items: start;
+    }
+    .calc-controls {
+      padding: 28px;
+      background: var(--pw-surface);
+      border: 1px solid var(--pw-border);
+      border-radius: 12px;
+      display: flex; flex-direction: column; gap: 24px;
+    }
+    .calc-summary {
+      padding: 28px;
+      background: var(--pw-bg-2);
+      border: 1px solid var(--pw-border-2);
+      border-radius: 12px;
+      display: flex; flex-direction: column; gap: 18px;
+      position: relative; overflow: hidden;
+    }
+    .calc-summary::before {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(80% 60% at 50% 0%, rgba(110,91,241,0.12), transparent 70%);
+      pointer-events: none;
+    }
+    .calc-summary > * { position: relative; }
+    .calc-mat-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .calc-mat {
+      padding: 12px 10px;
+      background: var(--pw-bg-2);
+      border: 1px solid var(--pw-border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color var(--pw-dur-base) var(--pw-ease),
+                  background var(--pw-dur-base) var(--pw-ease);
+      text-align: center;
+    }
+    .calc-mat input { position: absolute; opacity: 0; pointer-events: none; }
+    .calc-mat .id {
+      font-family: var(--pw-font-mono); font-size: 10px;
+      color: var(--pw-fg-4); letter-spacing: 0.04em;
+    }
+    .calc-mat .n {
+      font-size: 13px; font-weight: 500; color: var(--pw-fg);
+      margin-top: 4px;
+    }
+    .calc-mat:hover { border-color: var(--pw-border-2); }
+    .calc-mat:has(input:checked) {
+      border-color: rgba(110,91,241,0.5);
+      background: rgba(110,91,241,0.06);
+    }
+
+    /* slider */
+    .range-row { display: flex; flex-direction: column; gap: 10px; }
+    .range-top {
+      display: flex; align-items: baseline; justify-content: space-between;
+    }
+    .range-top .val {
+      font-family: var(--pw-font-mono); font-size: 14px; color: var(--pw-fg);
+    }
+    .range-top .val .u { font-size: 11px; color: var(--pw-fg-4); margin-left: 4px; }
+    .range {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 4px;
+      background: var(--pw-bg);
+      border: 1px solid var(--pw-border);
+      border-radius: 99px; outline: none;
+    }
+    .range::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 16px; height: 16px; border-radius: 99px;
+      background: linear-gradient(135deg,#6E5BF1,#4DDFC2);
+      border: 2px solid var(--pw-bg);
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(110,91,241,0.4);
+    }
+    .range::-moz-range-thumb {
+      width: 16px; height: 16px; border-radius: 99px;
+      background: linear-gradient(135deg,#6E5BF1,#4DDFC2);
+      border: 2px solid var(--pw-bg);
+      cursor: pointer;
+    }
+
+    /* summary */
+    .calc-price {
+      display: flex; align-items: baseline; gap: 8px;
+      padding-bottom: 18px; border-bottom: 1px solid var(--pw-border);
+    }
+    .calc-price .v {
+      font-size: 40px; font-weight: 600; letter-spacing: -0.02em;
+      color: var(--pw-fg);
+    }
+    .calc-price .u {
+      font-family: var(--pw-font-mono); font-size: 13px;
+      color: var(--pw-fg-3);
+    }
+    .calc-price .badge {
+      margin-left: auto; padding: 4px 10px;
+      background: rgba(77,223,194,0.10);
+      border: 1px solid rgba(77,223,194,0.32);
+      color: #4DDFC2;
+      border-radius: 999px;
+      font-size: 10px; font-family: var(--pw-font-mono);
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .calc-breakdown {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .calc-line {
+      display: flex; justify-content: space-between;
+      font-size: 12px; font-family: var(--pw-font-mono);
+    }
+    .calc-line .k { color: var(--pw-fg-4); }
+    .calc-line .v { color: var(--pw-fg-1); }
+    .calc-note {
+      font-size: 11px; color: var(--pw-fg-4);
+      font-family: var(--pw-font-mono); line-height: 1.55;
+      padding-top: 14px; border-top: 1px solid var(--pw-border);
+    }
+
+    /* ============ FAQ ============ */
+    .faq-list { margin-top: 56px; display: flex; flex-direction: column; gap: 0; }
+    .faq-item {
+      border-top: 1px solid var(--pw-border);
+    }
+    .faq-item:last-of-type { border-bottom: 1px solid var(--pw-border); }
+    .faq-q {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 0; cursor: pointer;
+      font-size: 16px; font-weight: 500; color: var(--pw-fg);
+      letter-spacing: -0.01em;
+      transition: color var(--pw-dur-base) var(--pw-ease);
+    }
+    .faq-q:hover { color: var(--pw-fg); }
+    .faq-q .plus {
+      width: 28px; height: 28px; border-radius: 6px;
+      background: var(--pw-surface);
+      border: 1px solid var(--pw-border-2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--pw-fg-2); flex-shrink: 0;
+      transition: transform var(--pw-dur-base) var(--pw-ease);
+    }
+    .faq-item.open .faq-q .plus { transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height var(--pw-dur-slow) var(--pw-ease);
+    }
+    .faq-item.open .faq-a { max-height: 400px; }
+    .faq-a-inner {
+      padding: 0 0 22px;
+      font-size: 14px; color: var(--pw-fg-3); line-height: 1.6;
+      max-width: 720px;
+    }
+    .faq-a-inner b { color: var(--pw-fg-2); font-weight: 500; }
+
+    /* ============ ALT CONTACT STRIP ============ */
+    .alt-contact { padding: 96px 0; position: relative; overflow: hidden; }
+    .alt-contact::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(60% 60% at 50% 100%, rgba(110,91,241,0.16), transparent 60%);
+    }
+    .alt-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 16px; position: relative;
+    }
+    .alt-card {
+      padding: 28px;
+      background: var(--pw-surface);
+      border: 1px solid var(--pw-border);
+      border-radius: 12px;
+      transition: border-color var(--pw-dur-base) var(--pw-ease),
+                  background var(--pw-dur-base) var(--pw-ease);
+    }
+    .alt-card:hover { border-color: var(--pw-border-2); background: var(--pw-surface-2); }
+    .alt-card .icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: var(--pw-surface-2);
+      border: 1px solid var(--pw-border-2);
+      color: var(--pw-accent);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .alt-card h3 {
+      margin: 0; font-size: 16px; font-weight: 600; color: var(--pw-fg);
+    }
+    .alt-card p {
+      margin: 6px 0 0; font-size: 13px; color: var(--pw-fg-3); line-height: 1.55;
+    }
+    .alt-card .v {
+      margin-top: 14px; padding-top: 14px;
+      border-top: 1px solid var(--pw-border);
+      font-size: 13px; font-family: var(--pw-font-mono); color: var(--pw-fg);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .alt-card .v .arr { color: var(--pw-fg-4); }
+
+    /* ============ FOOTER ============ */
+    .footer {
+      padding: 56px 0 32px;
+      border-top: 1px solid var(--pw-border);
+      color: var(--pw-fg-3); font-size: 13px;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 1.4fr repeat(4, 1fr);
+      gap: 32px; margin-bottom: 40px;
+    }
+    .footer-col h4 {
+      font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--pw-fg-4); font-weight: 500; margin: 0 0 12px;
+    }
+    .footer-col a { display: block; color: var(--pw-fg-2); padding: 6px 0; }
+    .footer-col a:hover { color: var(--pw-fg); }
+    .footer-bot {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 24px; border-top: 1px solid var(--pw-border);
+      font-family: var(--pw-font-mono); font-size: 11px; color: var(--pw-fg-4);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================== NAV -->
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="nav-brand" href="Home Screen.html">
+        <svg width="22" height="22" viewBox="0 0 36 36" fill="none">
+          <defs>
+            <linearGradient id="lg-nav" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#6E5BF1"/>
+              <stop offset="0.55" stop-color="#5C8BFF"/>
+              <stop offset="1" stop-color="#4DDFC2"/>
+            </linearGradient>
+          </defs>
+          <rect x="2"  y="22" width="32" height="3" rx="1.5" fill="url(#lg-nav)" opacity="0.55"/>
+          <rect x="4"  y="16" width="28" height="3" rx="1.5" fill="url(#lg-nav)" opacity="0.75"/>
+          <rect x="7"  y="10" width="22" height="3" rx="1.5" fill="url(#lg-nav)" opacity="0.9"/>
+          <rect x="11" y="4"  width="14" height="3" rx="1.5" fill="url(#lg-nav)"/>
+        </svg>
+        ProtoWave
+        <span class="sub">CAD · 3D štampa · skeniranje · automatizacija</span>
+      </a>
+      <nav class="nav-links">
+        <a href="Home Screen.html#usluge">Usluge</a>
+        <a href="Home Screen.html#proces">Proces</a>
+        <a href="Home Screen.html#materijali">Materijali</a>
+        <a href="Home Screen.html#primena">Primena</a>
+        <a href="#calc">Kalkulator ponude</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="btn btn-ghost" href="#prijava">
+</a>
+        <a class="btn btn-primary" href="Kontakt.html">Kontakt</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================== HERO -->
+  <section class="page-hero">
+    <div class="page-hero-bg"></div>
+    <div class="wrap">
+      <span class="section-eyebrow">Kontakt · pokreni projekat</span>
+      <h1>
+        Pošalji ideju, fajl ili problem koji treba rešiti.<br/>
+        <span class="grad">Odgovor u 24 sata.</span>
+      </h1>
+      <p class="lede">
+        Bez ping-ponga i nepotrebnih sastanaka. Opišite šta vam treba i, ako imate, prikačite STL · STEP · IGES · DWG · PDF. Vraćamo kratku procenu, predlog materijala i sledeći korak.
+      </p>
+      <div class="hero-meta">
+        <span class="pill"><span class="d"></span>studio aktivan · pon–pet · 09–18h</span>
+        <span class="pill">NDA spreman · potpis pre prvog fajla</span>
+        <span class="pill">isporuka · Srbija · BiH · HR</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== MAIN: FORM + SIDEBAR -->
+  <section class="contact-main" id="form">
+    <div class="wrap">
+      <div class="contact-grid">
+
+        <!-- ============ FORM ============ -->
+        <form class="form-card" onsubmit="event.preventDefault(); alert('Demo forma — povezuje se sa backend-om u produkciji.');">
+          <div class="form-card-bar">
+            <span class="crumb">protowave.studio / kontakt / novi-upit.form</span>
+            <span class="right"><span class="d"></span>auto-save uključen</span>
+          </div>
+
+          <div class="form-body">
+
+            <!-- 01 PROJECT TYPE -->
+            <div class="fset">
+              <div class="fset-head">
+                <span class="fset-num">01</span>
+                <span class="fset-title">Tip projekta</span>
+                <span class="fset-hint">izaberi jedno ili više</span>
+              </div>
+              <div class="chips">
+                <label class="chip">
+                  <input type="checkbox" name="type" value="print" checked/>
+                  <span class="t"><span class="num">01</span>3D štampa</span>
+                  <span class="s">FDM · MSLA · CF</span>
+                </label>
+                <label class="chip">
+                  <input type="checkbox" name="type" value="cad"/>
+                  <span class="t"><span class="num">02</span>CAD konstrukcija</span>
+                  <span class="s">model + nacrt</span>
+                </label>
+                <label class="chip">
+                  <input type="checkbox" name="type" value="scan"/>
+                  <span class="t"><span class="num">03</span>Skeniranje</span>
+                  <span class="s">reverse engineering</span>
+                </label>
+                <label class="chip">
+                  <input type="checkbox" name="type" value="auto"/>
+                  <span class="t"><span class="num">04</span>Automatizacija</span>
+                  <span class="s">ESP32 · PLC · senzori</span>
+                </label>
+                <label class="chip">
+                  <input type="checkbox" name="type" value="tool"/>
+                  <span class="t"><span class="num">05</span>Specijalni alat</span>
+                  <span class="s">prihvati · šabloni</span>
+                </label>
+                <label class="chip">
+                  <input type="checkbox" name="type" value="other"/>
+                  <span class="t"><span class="num">06</span>Drugo</span>
+                  <span class="s">opiši u briefu</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 02 BRIEF -->
+            <div class="fset">
+              <div class="fset-head">
+                <span class="fset-num">02</span>
+                <span class="fset-title">Brief projekta</span>
+                <span class="fset-hint" id="briefCount">0 / 800</span>
+              </div>
+              <div class="field">
+                <textarea
+                  class="textarea"
+                  id="brief"
+                  name="brief"
+                  rows="5"
+                  maxlength="800"
+                  placeholder="Šta je deo, gde ide, kakvo opterećenje trpi? Ako imate, navedite dimenzije, tolerancije, željeni materijal i broj komada."
+                ></textarea>
+                <div class="field-hint">
+                  <span>što više detalja — to brža i preciznija procena</span>
+                  <span>min 40 znakova</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 03 UPLOAD -->
+            <div class="fset">
+              <div class="fset-head">
+                <span class="fset-num">03</span>
+                <span class="fset-title">Fajlovi</span>
+                <span class="fset-hint">opciono · do 100 MB</span>
+              </div>
+              <label class="uploader" for="files">
+                <span class="icon">
+                  <svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 16V4M6 10l6-6 6 6"/>
+                    <path d="M4 20h16"/>
+                  </svg>
+                </span>
+                <span class="t">Prevuci ili <b>izaberi fajlove</b> sa diska</span>
+                <span class="s">STL · STEP · IGES · DWG · PDF · ZIP · do 100 MB</span>
+                <div class="formats">
+                  <span>.stl</span><span>.step</span><span>.iges</span>
+                  <span>.dwg</span><span>.pdf</span><span>.zip</span>
+                </div>
+                <input id="files" type="file" multiple style="display:none"/>
+              </label>
+            </div>
+
+            <!-- 04 SPECS -->
+            <div class="fset">
+              <div class="fset-head">
+                <span class="fset-num">04</span>
+                <span class="fset-title">Tehnički parametri</span>
+                <span class="fset-hint">orijentaciono · finalizujemo zajedno</span>
+              </div>
+              <div class="field-row-3">
+                <div class="field">
+                  <label class="label">Materijal</label>
+                  <select class="select" name="material">
+                    <option>Predloži ProtoWave</option>
+                    <option>PLA · prototip</option>
+                    <option>PETG · default</option>
+                    <option>TPU 85A · elastično</option>
+                    <option>ABS · temperatura</option>
+                    <option>PC-ABS · inženjerski</option>
+                    <option>PETG-CF · PA-CF</option>
+                    <option>Resin · MSLA</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="label">Količina</label>
+                  <select class="select" name="quantity">
+                    <option>1 komad</option>
+                    <option>2–10 komada</option>
+                    <option>10–50 komada</option>
+                    <option>50–200 komada</option>
+                    <option>200+ (mala serija)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label class="label">Željeni rok</label>
+                  <select class="select" name="deadline">
+                    <option>Što pre · 1–3 dana</option>
+                    <option>Ove nedelje</option>
+                    <option>2 nedelje</option>
+                    <option>Mesec dana</option>
+                    <option>Fleksibilno</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- 05 CONTACT INFO -->
+            <div class="fset">
+              <div class="fset-head">
+                <span class="fset-num">05</span>
+                <span class="fset-title">Tvoji podaci</span>
+                <span class="fset-hint">za odgovor i ponudu</span>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label class="label">Ime i prezime <span class="req">*</span></label>
+                  <input class="input" type="text" name="name" placeholder="Marko Marković" required/>
+                </div>
+                <div class="field">
+                  <label class="label">Kompanija</label>
+                  <input class="input" type="text" name="company" placeholder="opciono"/>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label class="label">Email <span class="req">*</span></label>
+                  <input class="input" type="email" name="email" placeholder="ime@firma.rs" required/>
+                </div>
+                <div class="field">
+                  <label class="label">Telefon</label>
+                  <input class="input" type="tel" name="phone" placeholder="+381 ..."/>
+                </div>
+              </div>
+
+              <label class="check-row">
+                <input type="checkbox" name="nda"/>
+                <span class="box">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <path d="M5 12l5 5L20 7"/>
+                  </svg>
+                </span>
+                <span class="body">
+                  <span class="t">Tražim NDA pre slanja fajlova</span>
+                  <span class="s">standardan obrazac · potpis u istom danu</span>
+                </span>
+              </label>
+
+              <label class="check-row">
+                <input type="checkbox" name="terms" required/>
+                <span class="box">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <path d="M5 12l5 5L20 7"/>
+                  </svg>
+                </span>
+                <span class="body">
+                  <span class="t">Slažem se sa uslovima korišćenja i politikom privatnosti</span>
+                  <span class="s">koristimo podatke samo za odgovor na ovaj upit</span>
+                </span>
+              </label>
+            </div>
+
+            <!-- SUBMIT -->
+            <div class="submit-row">
+              <div class="meta">
+                <span><b>Odgovor:</b> u roku od 24h, radnim danima</span>
+                <span>kontakt@protowave.studio · +381 64 0715 696</span>
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg">
+                Pošalji upit
+                <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M5 12h14M13 6l6 6-6 6"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- ============ SIDEBAR ============ -->
+        <aside class="side">
+
+          <div class="side-card gradient">
+            <div class="head">Direktan kontakt</div>
+            <div class="side-row">
+              <span class="k">Email</span>
+              <span class="v"><a href="mailto:kontakt@protowave.studio">kontakt@protowave.studio</a></span>
+            </div>
+            <div class="side-row">
+              <span class="k">Telefon</span>
+              <span class="v"><a href="tel:+381640715696">+381 64 0715 696</a></span>
+            </div>
+            <div class="side-row">
+              <span class="k">Studio</span>
+              <span class="v">Novi Sad · Srbija</span>
+            </div>
+            <div class="side-row">
+              <span class="k">Radno vreme</span>
+              <span class="v">pon–pet · 09–18h</span>
+            </div>
+            <div style="margin-top:14px">
+              <span class="nda-pill"><span class="d"></span>NDA spreman pre prvog fajla</span>
+            </div>
+          </div>
+
+          <div class="side-card">
+            <div class="head">Šta sledi nakon upita</div>
+            <div class="next-list">
+              <div class="next-item">
+                <div class="num">01</div>
+                <div class="body">
+                  <div class="t">Pregled briefa i fajlova</div>
+                  <div class="s">analiza zahteva i namene</div>
+                </div>
+                <div class="eta">do 24h</div>
+              </div>
+              <div class="next-item">
+                <div class="num">02</div>
+                <div class="body">
+                  <div class="t">Kratka procena + materijal</div>
+                  <div class="s">cena · rok · tehnologija</div>
+                </div>
+                <div class="eta">1–2 dana</div>
+              </div>
+              <div class="next-item">
+                <div class="num">03</div>
+                <div class="body">
+                  <div class="t">Potvrda i kreće realizacija</div>
+                  <div class="s">CAD · štampa · isporuka</div>
+                </div>
+                <div class="eta">1–5 dana</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="side-card">
+            <div class="head">Prihvatamo fajlove</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <span class="nda-pill" style="background:var(--pw-bg-2);border-color:var(--pw-border-2);color:var(--pw-fg-2)">STL</span>
+              <span class="nda-pill" style="background:var(--pw-bg-2);border-color:var(--pw-border-2);color:var(--pw-fg-2)">STEP</span>
+              <span class="nda-pill" style="background:var(--pw-bg-2);border-color:var(--pw-border-2);color:var(--pw-fg-2)">IGES</span>
+              <span class="nda-pill" style="background:var(--pw-bg-2);border-color:var(--pw-border-2);color:var(--pw-fg-2)">DWG</span>
+              <span class="nda-pill" style="background:var(--pw-bg-2);border-color:var(--pw-border-2);color:var(--pw-fg-2)">PDF</span>
+              <span class="nda-pill" style="background:var(--pw-bg-2);border-color:var(--pw-border-2);color:var(--pw-fg-2)">ZIP</span>
+            </div>
+            <p style="margin:16px 0 0;font-size:12px;color:var(--pw-fg-3);font-family:var(--pw-font-mono);line-height:1.6">
+              Nema fajla? Pošalji skicu, fotografiju ili samo opis u briefu — krećemo od ideje.
+            </p>
+          </div>
+
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== QUOTE CALCULATOR -->
+  <section class="section" id="calc">
+    <div class="wrap">
+      <span class="section-eyebrow">Instant procena</span>
+      <h2 class="section-title">Kalkulator ponude · gruba procena u 30 sekundi.</h2>
+      <p class="section-sub">
+        Izaberite materijal, težinu dela i broj komada — dobićete orijentacionu cenu i vreme štampe. Finalna ponuda zavisi od geometrije, tolerancija i finalne obrade.
+      </p>
+
+      <div class="calc-grid">
+        <div class="calc-controls">
+          <div>
+            <div class="label" style="margin-bottom:12px">Materijal</div>
+            <div class="calc-mat-grid">
+              <label class="calc-mat"><input type="radio" name="cmat" value="PLA" data-price="0.08" checked/><div class="id">M-01</div><div class="n">PLA</div></label>
+              <label class="calc-mat"><input type="radio" name="cmat" value="PETG" data-price="0.10"/><div class="id">M-02</div><div class="n">PETG</div></label>
+              <label class="calc-mat"><input type="radio" name="cmat" value="TPU" data-price="0.14"/><div class="id">M-03</div><div class="n">TPU 85A</div></label>
+              <label class="calc-mat"><input type="radio" name="cmat" value="ABS" data-price="0.11"/><div class="id">M-04</div><div class="n">ABS</div></label>
+              <label class="calc-mat"><input type="radio" name="cmat" value="PCABS" data-price="0.18"/><div class="id">M-05</div><div class="n">PC-ABS</div></label>
+              <label class="calc-mat"><input type="radio" name="cmat" value="CF" data-price="0.28"/><div class="id">M-06</div><div class="n">CF kompozit</div></label>
+              <label class="calc-mat"><input type="radio" name="cmat" value="RESIN" data-price="0.22"/><div class="id">M-07</div><div class="n">Resin</div></label>
+              <label class="calc-mat"><input type="radio" name="cmat" value="ENG" data-price="0.40"/><div class="id">M-08</div><div class="n">Engineering</div></label>
+            </div>
+          </div>
+
+          <div class="range-row">
+            <div class="range-top">
+              <span class="label">Težina dela</span>
+              <span class="val"><span id="cMass">120</span><span class="u">g</span></span>
+            </div>
+            <input class="range" id="rMass" type="range" min="10" max="800" step="5" value="120"/>
+            <div class="field-hint">
+              <span>10 g</span><span>800 g</span>
+            </div>
+          </div>
+
+          <div class="range-row">
+            <div class="range-top">
+              <span class="label">Broj komada</span>
+              <span class="val"><span id="cQty">1</span><span class="u">kom</span></span>
+            </div>
+            <input class="range" id="rQty" type="range" min="1" max="200" step="1" value="1"/>
+            <div class="field-hint">
+              <span>1 kom</span><span>200 kom</span>
+            </div>
+          </div>
+
+          <div class="range-row">
+            <div class="range-top">
+              <span class="label">Popunjenost (infill)</span>
+              <span class="val"><span id="cInfill">25</span><span class="u">%</span></span>
+            </div>
+            <input class="range" id="rInfill" type="range" min="10" max="100" step="5" value="25"/>
+            <div class="field-hint">
+              <span>10 %</span><span>100 %</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-summary">
+          <div>
+            <div class="label">Orijentaciona cena</div>
+            <div class="calc-price">
+              <span class="v" id="cPrice">14</span>
+              <span class="u">EUR</span>
+              <span class="badge">~procena</span>
+            </div>
+          </div>
+
+          <div class="calc-breakdown">
+            <div class="calc-line"><span class="k">Materijal</span><span class="v" id="cBrMat">PLA · 0.08 €/g</span></div>
+            <div class="calc-line"><span class="k">Težina · komad</span><span class="v" id="cBrMass">120 g</span></div>
+            <div class="calc-line"><span class="k">Količina</span><span class="v" id="cBrQty">1 kom</span></div>
+            <div class="calc-line"><span class="k">Infill</span><span class="v" id="cBrInfill">25 %</span></div>
+            <div class="calc-line"><span class="k">Procenjeno vreme štampe</span><span class="v" id="cBrTime">~ 4 h 30 min</span></div>
+            <div class="calc-line"><span class="k">Setup + post-obrada</span><span class="v">uključeno</span></div>
+          </div>
+
+          <div class="calc-note">
+            * Procena ne uključuje složenu post-obradu, bojenje, sklapanje, alate ili specijalne tolerancije. Za finalnu ponudu pošaljite STL ili STEP fajl preko forme iznad.
+          </div>
+
+          <a class="btn btn-primary btn-lg btn-block" href="#form">
+            Pošalji fajl za tačnu ponudu
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M5 12h14M13 6l6 6-6 6"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== FAQ -->
+  <section class="section" id="faq">
+    <div class="wrap">
+      <span class="section-eyebrow">Često pitanja</span>
+      <h2 class="section-title">Pre nego što pošaljete upit.</h2>
+      <p class="section-sub">
+        Kratki odgovori na pitanja koja klijenti najčešće postavljaju pre prve saradnje. Za sve specifične slučajeve — javite se direktno.
+      </p>
+
+      <div class="faq-list">
+        <div class="faq-item open">
+          <div class="faq-q">
+            Koliko brzo dobijam odgovor na upit?
+            <span class="plus">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </span>
+          </div>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              Standardno u roku od <b>24 sata</b>, radnim danima. Za hitne projekte (rok 1–3 dana) odgovaramo isti dan — naznačite to u briefu i odgovor stiže prioritetno.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">
+            Da li potpisujete NDA pre slanja fajlova?
+            <span class="plus">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </span>
+          </div>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              Da. Imamo <b>standardni obrazac</b> koji potpisujemo digitalno u istom danu, pre nego što nam pošaljete bilo kakav fajl. Ako imate sopstveni NDA, takođe ga pregledamo i potpišemo u roku od 48h.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">
+            Šta ako nemam CAD fajl, samo skicu ili fotografiju?
+            <span class="plus">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </span>
+          </div>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              Nema problema — najveći deo projekata kreće od skice, fotografije ili postojećeg dela koji treba digitalizovati. <b>CAD konstrukcija je deo usluge</b>, naplaćuje se odvojeno samo ako je obim modelovanja veći od ~2 sata rada.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">
+            Koliko košta prototip?
+            <span class="plus">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </span>
+          </div>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              Zavisi od materijala, veličine i tolerancija. Tipičan prototip do 250 g u PLA/PETG ide od <b>15–40 EUR</b>. Inženjerski materijali i CF kompoziti su 2–4× skuplji. Iznad — koristi kalkulator za grubu procenu ili pošalji fajl za tačnu ponudu.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">
+            Šaljete li u celu Srbiju i region?
+            <span class="plus">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </span>
+          </div>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              Da. Pokrivamo <b>Srbiju, BiH i Hrvatsku</b> kurirskim službama (BEX, Post Express, DPD). Za hitne pošiljke unutar Novog Sada — isporuka istog dana, lično preuzimanje moguće na adresi studija.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q">
+            Mogu li dobiti malu seriju (50–200 komada)?
+            <span class="plus">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </span>
+          </div>
+          <div class="faq-a">
+            <div class="faq-a-inner">
+              Da — radimo serije do <b>~200 delova</b> direktno na našim mašinama. Za veće serije pripremamo fajl i ulaz za vakuum-livenje ili CNC, kao zaseban modul. Cena po komadu pada značajno sa količinom.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== ALT CONTACT -->
+  <section class="alt-contact">
+    <div class="wrap">
+      <span class="section-eyebrow">Drugi načini</span>
+      <h2 class="section-title">Brže od forme.</h2>
+      <p class="section-sub">
+        Ako vam je lakše — direktan email, poziv ili poseta studiju. Za sve isto radno vreme i ista 24h SLA.
+      </p>
+
+      <div class="alt-grid">
+        <a class="alt-card" href="mailto:kontakt@protowave.studio">
+          <div class="icon">
+            <svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="5" width="18" height="14" rx="2"/>
+              <path d="M3 7l9 6 9-6"/>
+            </svg>
+          </div>
+          <h3>Email</h3>
+          <p>Najlakše za upite sa fajlovima, briefovima ili NDA dokumentima. Odgovaramo u 24h.</p>
+          <div class="v">
+            <span>kontakt@protowave.studio</span>
+            <span class="arr">→</span>
+          </div>
+        </a>
+
+        <a class="alt-card" href="tel:+381640715696">
+          <div class="icon">
+            <svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </div>
+          <h3>Telefon</h3>
+          <p>Za brzu konsultaciju, hitne projekte ili dogovor poseta studiju. Pon–pet, 09–18h.</p>
+          <div class="v">
+            <span>+381 64 0715 696</span>
+            <span class="arr">→</span>
+          </div>
+        </a>
+
+        <div class="alt-card">
+          <div class="icon">
+            <svg class="ico-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 22s-8-7.5-8-13a8 8 0 0 1 16 0c0 5.5-8 13-8 13z"/>
+              <circle cx="12" cy="9" r="3"/>
+            </svg>
+          </div>
+          <h3>Studio</h3>
+          <p>Novi Sad · Srbija. Posete uz prethodni dogovor — dolazak na isti dan moguć.</p>
+          <div class="v">
+            <span>Bulevar oslobođenja, NS</span>
+            <span class="arr">→</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================== FOOTER -->
+  <footer class="footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <svg width="22" height="22" viewBox="0 0 36 36" fill="none">
+              <defs>
+                <linearGradient id="lg-ft" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#6E5BF1"/>
+                  <stop offset="0.55" stop-color="#5C8BFF"/>
+                  <stop offset="1" stop-color="#4DDFC2"/>
+                </linearGradient>
+              </defs>
+              <rect x="2"  y="22" width="32" height="3" rx="1.5" fill="url(#lg-ft)" opacity="0.55"/>
+              <rect x="4"  y="16" width="28" height="3" rx="1.5" fill="url(#lg-ft)" opacity="0.75"/>
+              <rect x="7"  y="10" width="22" height="3" rx="1.5" fill="url(#lg-ft)" opacity="0.9"/>
+              <rect x="11" y="4"  width="14" height="3" rx="1.5" fill="url(#lg-ft)"/>
+            </svg>
+            <span style="font-size:15px;font-weight:600;color:var(--pw-fg)">ProtoWave</span>
+          </div>
+          <p style="margin:0;color:var(--pw-fg-3);max-width:280px;line-height:1.6;font-size:13px">
+            Inženjerski studio za 3D štampu i prototipiranje. Novi Sad · Srbija.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Usluge</h4>
+          <a href="Home Screen.html#usluge">3D štampa</a>
+          <a href="Home Screen.html#usluge">CAD konstrukcija</a>
+          <a href="Home Screen.html#usluge">Skeniranje</a>
+          <a href="Home Screen.html#usluge">Automatizacija</a>
+        </div>
+        <div class="footer-col">
+          <h4>Studio</h4>
+          <a href="#">O nama</a>
+          <a href="#">Klijenti</a>
+          <a href="#">Portfolio</a>
+          <a href="#">Karijera</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resursi</h4>
+          <a href="Home Screen.html#materijali">Materijali</a>
+          <a href="Kontakt.html#calc">Kalkulator ponude</a>
+          <a href="Kontakt.html#faq">FAQ</a>
+          <a href="#">Tehnički vodič</a>
+        </div>
+        <div class="footer-col">
+          <h4>Pravno</h4>
+          <a href="#">Uslovi</a>
+          <a href="#">Privatnost</a>
+          <a href="#">NDA · obrazac</a>
+        </div>
+      </div>
+      <div class="footer-bot">
+        <span>© 2026 ProtoWave · Novi Sad · Srbija</span>
+        <span>kontakt@protowave.studio</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // brief char counter
+    (function () {
+      var ta = document.getElementById('brief');
+      var lbl = document.getElementById('briefCount');
+      if (!ta || !lbl) return;
+      ta.addEventListener('input', function () {
+        lbl.textContent = ta.value.length + ' / 800';
+      });
+    })();
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-item').forEach(function (item) {
+      item.querySelector('.faq-q').addEventListener('click', function () {
+        item.classList.toggle('open');
+      });
+    });
+
+    // Quote calculator
+    (function () {
+      var mass   = document.getElementById('rMass');
+      var qty    = document.getElementById('rQty');
+      var infill = document.getElementById('rInfill');
+      var cMass   = document.getElementById('cMass');
+      var cQty    = document.getElementById('cQty');
+      var cInfill = document.getElementById('cInfill');
+      var cPrice  = document.getElementById('cPrice');
+      var cBrMat   = document.getElementById('cBrMat');
+      var cBrMass  = document.getElementById('cBrMass');
+      var cBrQty   = document.getElementById('cBrQty');
+      var cBrInfill = document.getElementById('cBrInfill');
+      var cBrTime  = document.getElementById('cBrTime');
+
+      function getMat() {
+        var el = document.querySelector('input[name="cmat"]:checked');
+        return {
+          name: el.value,
+          price: parseFloat(el.dataset.price)
+        };
+      }
+
+      function recalc() {
+        var m = getMat();
+        var massV = parseInt(mass.value, 10);
+        var qtyV  = parseInt(qty.value, 10);
+        var infV  = parseInt(infill.value, 10);
+        var infMult = 0.6 + (infV / 100) * 0.8;       // infill 10% → 0.68, 100% → 1.4
+        var setup = 4;                                 // EUR per job
+        var qtyDiscount = qtyV >= 50 ? 0.75 : qtyV >= 10 ? 0.88 : qtyV >= 2 ? 0.95 : 1;
+        var perPart = massV * m.price * infMult;
+        var total = (perPart * qtyV * qtyDiscount) + setup;
+        var minutesPerGram = 2.4 * infMult;
+        var totalMin = Math.round(massV * qtyV * minutesPerGram);
+        var hrs = Math.floor(totalMin / 60);
+        var mins = totalMin % 60;
+
+        cMass.textContent   = massV;
+        cQty.textContent    = qtyV;
+        cInfill.textContent = infV;
+        cPrice.textContent  = Math.max(8, Math.round(total));
+        cBrMat.textContent    = m.name + ' · ' + m.price.toFixed(2) + ' €/g';
+        cBrMass.textContent   = massV + ' g';
+        cBrQty.textContent    = qtyV + ' kom' + (qtyV >= 10 ? ' · popust' : '');
+        cBrInfill.textContent = infV + ' %';
+        cBrTime.textContent   = '~ ' + (hrs ? hrs + ' h ' : '') + mins + ' min';
+      }
+
+      [mass, qty, infill].forEach(function (el) { el.addEventListener('input', recalc); });
+      document.querySelectorAll('input[name="cmat"]').forEach(function (el) {
+        el.addEventListener('change', recalc);
+      });
+      recalc();
+    })();
+  </script>
+</body>
+</html>
